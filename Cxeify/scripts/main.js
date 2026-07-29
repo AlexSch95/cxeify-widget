@@ -7,7 +7,7 @@
 
 // ── State ─────────────────────────────────────────────────────────
 const state = {
-  serverUrl: 'http://127.0.0.1:3000',
+  serverUrl: '',
   pollingInterval: 2000,
   textColor: '#ffffff',
   accentColor: '#1DB954',
@@ -73,7 +73,10 @@ function applySettings(settings = {}) {
 
 // ── API Communication ─────────────────────────────────────────────
 async function apiFetch(path, options = {}) {
-  const url = `${state.serverUrl.replace(/\/+$/, '')}${path}`;
+  // When served via the server (same origin), just use the path directly
+  // When used as a local widget, use the configured server URL
+  const base = state.serverUrl ? state.serverUrl.replace(/\/+$/, '') : window.location.origin;
+  const url = `${base}${path}`;
   try {
     const response = await fetch(url, {
       ...options,

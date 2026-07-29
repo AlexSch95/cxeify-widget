@@ -168,7 +168,7 @@
       onDataUpdated: function(payload) { applySettings(payload && payload.settings); },
     };
 
-    if (iCUE_initialized) {
+    if (typeof iCUE_initialized !== 'undefined' && iCUE_initialized) {
       applySettings();
     }
   </script>

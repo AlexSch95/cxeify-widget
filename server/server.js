@@ -17,6 +17,17 @@ let pkceState = {};
 app.use(cors());
 app.use(express.json());
 
+// Serve widget files statically under /widget/
+const WIDGET_DIR = path.resolve(__dirname, '..', 'Cxeify');
+app.use('/widget', express.static(WIDGET_DIR, {
+  setHeaders: (res, filePath) => {
+    // Allow the widget to fetch from the same origin
+    if (filePath.endsWith('.html')) {
+      res.setHeader('Content-Security-Policy', "default-src 'self' 'unsafe-inline' 'unsafe-eval' *; img-src * data:; connect-src *; style-src 'self' 'unsafe-inline'");
+    }
+  }
+}));
+
 // ── File Persistence ───────────────────────────────────────────────
 function loadTokens() {
   try {
