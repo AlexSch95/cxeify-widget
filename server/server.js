@@ -17,16 +17,16 @@ let pkceState = {};
 app.use(cors());
 app.use(express.json());
 
-// Serve widget files statically under /widget/
-const WIDGET_DIR = path.resolve(__dirname, '..', 'Cxeify');
-app.use('/widget', express.static(WIDGET_DIR, {
-  setHeaders: (res, filePath) => {
-    // Allow the widget to fetch from the same origin
-    if (filePath.endsWith('.html')) {
-      res.setHeader('Content-Security-Policy', "default-src 'self' 'unsafe-inline' 'unsafe-eval' *; img-src * data:; connect-src *; style-src 'self' 'unsafe-inline'");
-    }
+// Serve widget files for browser debugging at /widget/
+app.use('/widget', express.static(path.join(__dirname, '..', 'Cxeify')));
+app.use('/widget', (req, res, next) => {
+  // Fallback to index.html for SPA-like navigation
+  if (!req.path.includes('.')) {
+    res.sendFile(path.join(__dirname, '..', 'Cxeify', 'index.html'));
+  } else {
+    next();
   }
-}));
+});
 
 // ── File Persistence ───────────────────────────────────────────────
 function loadTokens() {
@@ -622,19 +622,35 @@ setInterval(() => {
   }
 }, 600000);
 
-// Start server
+// Get local IP address for the widget setup hint
+const os = require('os');
+function getLocalIp() {
+  const interfaces = os.networkInterfaces();
+  for (const name of Object.keys(interfaces)) {
+    for (const iface of interfaces[name]) {
+      if (iface.family === 'IPv4' && !iface.internal) {
+        return iface.address;
+      }
+    }
+  }
+  return 'YOUR_PC_IP';
+}
+
+// Start server (only localhost - same machine as the widget)
 app.listen(PORT, '127.0.0.1', () => {
   console.log('');
   console.log('  ╔══════════════════════════════════════════════╗');
   console.log('  ║              🎵 Cxeify Server                ║');
   console.log('  ║                                              ║');
-  console.log(`  ║  Server running on http://127.0.0.1:${PORT}        ║`);
+  console.log(`  ║  Server:   http://127.0.0.1:${PORT}               ║`);
   console.log('  ║                                              ║');
-  console.log('  ║  1. Open http://127.0.0.1:3000 in your     ║');
-  console.log('  ║     browser to start setup                  ║');
-  console.log('  ║  2. Enter your Spotify Client ID            ║');
-  console.log('  ║  3. Authorize with Spotify                  ║');
-  console.log('  ║  4. Widget connects automatically           ║');
+  console.log('  ║  Open in browser:                           ║');
+  console.log('  ║  • Setup:    http://127.0.0.1:3000          ║');
+  console.log('  ║  • Widget:   http://127.0.0.1:3000/widget   ║');
+  console.log('  ║    (F12 for DevTools)                      ║');
+  console.log('  ║                                              ║');
+  console.log('  ║  The widget in iCUE connects automatically  ║');
+  console.log('  ║  with serverUrl = http://127.0.0.1:3000     ║');
   console.log('  ║                                              ║');
   console.log('  ╚══════════════════════════════════════════════╝');
   console.log('');

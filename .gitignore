@@ -1,5 +1,1 @@
-node_modules/
-server/node_modules/
-server/tokens.json
-server/config.json
-*.icuewidget
+nul

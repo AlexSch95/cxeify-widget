@@ -163,12 +163,25 @@
 
   <script src="scripts/main.js"></script>
   <script>
-    icueEvents = {
-      onICUEInitialized: function(payload) { applySettings(payload && payload.settings); },
-      onDataUpdated: function(payload) { applySettings(payload && payload.settings); },
-    };
+    // iCUE integration - only runs when loaded inside iCUE
+    try {
+      icueEvents = {
+        onICUEInitialized: function(payload) {
+          console.log('[Cxeify] iCUE initialized, payload:', payload);
+          applySettings(payload && payload.settings);
+        },
+        onDataUpdated: function(payload) {
+          console.log('[Cxeify] iCUE data updated, payload:', payload);
+          applySettings(payload && payload.settings);
+        },
+      };
 
-    if (typeof iCUE_initialized !== 'undefined' && iCUE_initialized) {
+      if (typeof iCUE_initialized !== 'undefined' && iCUE_initialized) {
+        applySettings();
+      }
+    } catch (e) {
+      console.log('[Cxeify] Running outside iCUE (browser debug mode)');
+      // Apply default settings for browser debugging
       applySettings();
     }
   </script>

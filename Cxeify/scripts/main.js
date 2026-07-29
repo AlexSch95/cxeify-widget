@@ -7,7 +7,7 @@
 
 // ── State ─────────────────────────────────────────────────────────
 const state = {
-  serverUrl: '',
+  serverUrl: 'http://127.0.0.1:3000',
   pollingInterval: 2000,
   textColor: '#ffffff',
   accentColor: '#1DB954',
@@ -54,14 +54,37 @@ const dom = {
 };
 
 // ── Settings (from iCUE) ──────────────────────────────────────────
+// Helper: read a global iCUE property variable safely
+function getIcueProperty(name, defaultValue) {
+  try {
+    if (typeof window !== 'undefined' && name in window) {
+      const val = window[name];
+      if (val !== undefined && val !== null && val !== '') return val;
+    }
+    // Fallback: try via Function constructor (catches bare globals too)
+    const val = Function('return typeof ' + name + ' !== "undefined" ? ' + name + ' : undefined')();
+    if (val !== undefined && val !== null && val !== '') return val;
+  } catch (e) { /* ignore */ }
+  return defaultValue;
+}
+
 function applySettings(settings = {}) {
+  // Merge settings object, then override with global iCUE variables if available
   Object.assign(state, settings);
+  state.textColor = getIcueProperty('textColor', state.textColor);
+  state.accentColor = getIcueProperty('accentColor', state.accentColor);
+  state.backgroundColor = getIcueProperty('backgroundColor', state.backgroundColor);
+  state.transparency = getIcueProperty('transparency', state.transparency);
+  state.serverUrl = getIcueProperty('serverUrl', state.serverUrl);
+  state.pollingInterval = getIcueProperty('pollingInterval', state.pollingInterval);
   
   // Apply CSS variables
   document.documentElement.style.setProperty('--text-color', state.textColor);
   document.documentElement.style.setProperty('--accent-color', state.accentColor);
   document.documentElement.style.setProperty('--background-color', state.backgroundColor);
   document.documentElement.style.setProperty('--transparency', state.transparency + '%');
+
+  console.log('[Cxeify] Settings applied:', JSON.stringify(state));
 
   // Restart polling with new interval if changed
   if (pollTimer) {
@@ -72,11 +95,19 @@ function applySettings(settings = {}) {
 }
 
 // ── API Communication ─────────────────────────────────────────────
+// Auto-detect if we're loaded from the server itself (same origin)
+function getApiBaseUrl() {
+  // If loaded from the widget route on the server, use relative URLs
+  if (window.location.port === '3000' || window.location.hostname === '127.0.0.1') {
+    return '';
+  }
+  // Otherwise use the configured server URL
+  return state.serverUrl.replace(/\/+$/, '');
+}
+
 async function apiFetch(path, options = {}) {
-  // When served via the server (same origin), just use the path directly
-  // When used as a local widget, use the configured server URL
-  const base = state.serverUrl ? state.serverUrl.replace(/\/+$/, '') : window.location.origin;
-  const url = `${base}${path}`;
+  const baseUrl = getApiBaseUrl();
+  const url = `${baseUrl}${path}`;
   try {
     const response = await fetch(url, {
       ...options,
@@ -93,6 +124,7 @@ async function apiFetch(path, options = {}) {
     return await response.json();
   } catch (e) {
     // Connection refused = server offline
+    console.warn(`API fetch failed: ${e.message}`);
     return null;
   }
 }
@@ -125,35 +157,49 @@ function stopPolling() {
 async function poll() {
   const result = await fetchStatus();
   
+  console.log('[Cxeify] Poll result:', JSON.stringify(result));
+  
   if (!result) {
-    // Server offline
+    console.log('[Cxeify] → Server offline (no response)');
     showState('offline');
     return;
   }
   
   // Check auth status from server
   if (result.auth === false) {
+    console.log('[Cxeify] → Not authenticated');
     showState('noauth');
     return;
   }
   
   if (!result.active || !result.data) {
-    // Server responded but no active playback
+    console.log('[Cxeify] → No active device');
     showState('nodevice');
     return;
   }
   
+  console.log('[Cxeify] → Player active, updating UI');
   updatePlayback(result.data);
   showState('player');
 }
 
 // ── UI State Management ───────────────────────────────────────────
 function showState(name) {
-  dom.loading.hidden = name !== 'loading';
-  dom.offline.hidden = name !== 'offline';
-  dom.nodevice.hidden = name !== 'nodevice';
-  dom.noauth.hidden = name !== 'noauth';
-  dom.player.hidden = name !== 'player';
+  // Use a CSS class approach instead of hidden attribute to avoid CSS specificity issues
+  const states = ['loading', 'offline', 'nodevice', 'noauth', 'player'];
+  states.forEach(s => {
+    const el = dom[s];
+    if (el) {
+      if (s === name) {
+        el.classList.remove('state-hidden');
+        el.removeAttribute('hidden');
+      } else {
+        el.classList.add('state-hidden');
+        el.setAttribute('hidden', '');
+      }
+    }
+  });
+  console.log('[Cxeify] showState:', name);
 }
 
 // ── Playback Update ───────────────────────────────────────────────

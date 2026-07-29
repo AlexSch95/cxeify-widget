@@ -12,6 +12,7 @@
       "platform": "windows"
     }
   ],
+  "interactive": true,
   "supported_devices": [
     {
       "type": "dashboard_lcd"
