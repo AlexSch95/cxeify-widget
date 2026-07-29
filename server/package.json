@@ -1,0 +1,14 @@
+{
+  "name": "cxeify-server",
+  "version": "1.0.0",
+  "description": "Cxeify companion server for Spotify playback control",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "open": "^8.4.2"
+  }
+}

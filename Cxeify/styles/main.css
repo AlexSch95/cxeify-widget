@@ -1,0 +1,440 @@
+:root {
+  /* Baseline unit */
+  --layout-unit: 1vmin;
+
+  /* Semantic tokens */
+  --space-gap: calc(var(--layout-unit) * 3);
+  --space-pad: calc(var(--layout-unit) * 5);
+  --font-hero: calc(var(--layout-unit) * 12);
+  --font-track: calc(var(--layout-unit) * 5);
+  --font-artist: calc(var(--layout-unit) * 3.5);
+  --font-label: calc(var(--layout-unit) * 2.8);
+  --font-small: calc(var(--layout-unit) * 2.2);
+  --radius-sm: calc(var(--layout-unit) * 1.5);
+  --radius-md: calc(var(--layout-unit) * 3);
+  --radius-lg: calc(var(--layout-unit) * 5);
+  --album-size: calc(var(--layout-unit) * 28);
+
+  /* Runtime colors (set by JS) */
+  --text-color: #ffffff;
+  --accent-color: #1DB954;
+  --background-color: #121212;
+  --transparency: 0%;
+}
+
+/* ── Base ──────────────────────────────────────────────────── */
+html, body {
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+  font-family: Inter, Segoe UI, system-ui, -apple-system, sans-serif;
+  color: var(--text-color);
+  -webkit-user-select: none;
+  user-select: none;
+  touch-action: manipulation;
+}
+
+body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+}
+
+/* ── Album Art Background ──────────────────────────────────── */
+#album-bg {
+  position: fixed;
+  inset: -20px;
+  background-size: cover;
+  background-position: center;
+  filter: blur(40px) brightness(0.3);
+  transition: background-image 0.5s ease;
+  z-index: 0;
+}
+
+#album-bg-overlay {
+  position: fixed;
+  inset: 0;
+  background: color-mix(in srgb, var(--background-color) calc(100% - var(--transparency)), transparent);
+  z-index: 1;
+}
+
+/* ── Main Content ──────────────────────────────────────────── */
+#content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  padding: var(--space-pad);
+  box-sizing: border-box;
+  gap: var(--space-gap);
+}
+
+/* ── State Overlays ────────────────────────────────────────── */
+.state-overlay {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: calc(var(--layout-unit) * 2);
+  text-align: center;
+  opacity: 0.8;
+}
+
+.state-overlay h2 {
+  margin: 0;
+  font-size: var(--font-track);
+  font-weight: 600;
+}
+
+.state-overlay p {
+  margin: 0;
+  font-size: var(--font-artist);
+  opacity: 0.7;
+}
+
+.offline-icon {
+  opacity: 0.5;
+}
+
+/* Spinner */
+.spinner {
+  width: calc(var(--layout-unit) * 6);
+  height: calc(var(--layout-unit) * 6);
+  border: 3px solid rgba(255,255,255,0.1);
+  border-top-color: var(--accent-color);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ── Album Art ─────────────────────────────────────────────── */
+#album-art-container {
+  display: flex;
+  justify-content: center;
+}
+
+#album-art-frame {
+  width: var(--album-size);
+  height: var(--album-size);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  box-shadow: 0 calc(var(--layout-unit) * 2) calc(var(--layout-unit) * 6) rgba(0,0,0,0.4);
+  flex-shrink: 0;
+}
+
+#album-art-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* ── Track Info ────────────────────────────────────────────── */
+#track-info {
+  text-align: center;
+  min-width: 0;
+  max-width: 90%;
+}
+
+#track-name {
+  font-size: var(--font-track);
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: calc(var(--layout-unit) * 0.5);
+}
+
+#track-artist {
+  font-size: var(--font-artist);
+  opacity: 0.8;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: calc(var(--layout-unit) * 0.3);
+}
+
+#track-album {
+  font-size: var(--font-label);
+  opacity: 0.5;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ── Progress Bar ──────────────────────────────────────────── */
+#progress-container {
+  width: 85%;
+  max-width: 500px;
+}
+
+#progress-bar {
+  position: relative;
+  height: calc(var(--layout-unit) * 1.2);
+  background: rgba(255,255,255,0.1);
+  border-radius: 999px;
+  cursor: pointer;
+  touch-action: none;
+}
+
+#progress-fill {
+  height: 100%;
+  background: var(--accent-color);
+  border-radius: 999px;
+  width: 0%;
+  transition: width 0.3s linear;
+}
+
+#progress-thumb {
+  position: absolute;
+  top: 50%;
+  width: calc(var(--layout-unit) * 2.5);
+  height: calc(var(--layout-unit) * 2.5);
+  background: var(--accent-color);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+
+#progress-bar:hover #progress-thumb,
+#progress-bar:active #progress-thumb {
+  opacity: 1;
+}
+
+#progress-time {
+  display: flex;
+  justify-content: space-between;
+  margin-top: calc(var(--layout-unit) * 0.8);
+  font-size: var(--font-small);
+  opacity: 0.6;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Controls ──────────────────────────────────────────────── */
+#controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: calc(var(--layout-unit) * 3);
+}
+
+.ctrl-btn {
+  background: none;
+  border: none;
+  color: var(--text-color);
+  opacity: 0.7;
+  cursor: pointer;
+  padding: calc(var(--layout-unit) * 1.5);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.15s, transform 0.1s;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.ctrl-btn:hover,
+.ctrl-btn:active {
+  opacity: 1;
+}
+
+.ctrl-btn:active {
+  transform: scale(0.92);
+}
+
+.ctrl-btn-play {
+  width: calc(var(--layout-unit) * 12);
+  height: calc(var(--layout-unit) * 12);
+  background: var(--accent-color);
+  color: #000;
+  opacity: 1;
+  border-radius: 50%;
+  box-shadow: 0 0 calc(var(--layout-unit) * 3) rgba(29, 185, 84, 0.3);
+}
+
+.ctrl-btn-play:hover,
+.ctrl-btn-play:active {
+  opacity: 1;
+  box-shadow: 0 0 calc(var(--layout-unit) * 5) rgba(29, 185, 84, 0.5);
+}
+
+.ctrl-btn[data-active="true"] {
+  opacity: 1;
+  color: var(--accent-color);
+}
+
+#btn-repeat {
+  position: relative;
+}
+
+.ctrl-badge {
+  position: absolute;
+  top: 0;
+  right: 0;
+  font-size: calc(var(--layout-unit) * 1.8);
+  font-weight: 700;
+  color: var(--accent-color);
+  pointer-events: none;
+}
+
+/* ── Volume Control ────────────────────────────────────────── */
+#volume-container {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--layout-unit) * 1.5);
+  width: 60%;
+  max-width: 300px;
+}
+
+.ctrl-btn-vol {
+  opacity: 0.5;
+  padding: 0;
+  flex-shrink: 0;
+}
+
+#volume-bar {
+  flex: 1;
+  position: relative;
+  height: calc(var(--layout-unit) * 0.8);
+  background: rgba(255,255,255,0.1);
+  border-radius: 999px;
+  cursor: pointer;
+  touch-action: none;
+}
+
+#volume-fill {
+  height: 100%;
+  background: var(--text-color);
+  border-radius: 999px;
+  width: 100%;
+  opacity: 0.5;
+}
+
+#volume-thumb {
+  position: absolute;
+  top: 50%;
+  width: calc(var(--layout-unit) * 2);
+  height: calc(var(--layout-unit) * 2);
+  background: var(--text-color);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+
+#volume-bar:hover #volume-thumb,
+#volume-bar:active #volume-thumb {
+  opacity: 0.8;
+}
+
+/* ── Responsive: taller layouts get bigger album art ───────── */
+@media (min-aspect-ratio: 1/1) {
+  :root {
+    --album-size: calc(var(--layout-unit) * 32);
+    --font-hero: calc(var(--layout-unit) * 14);
+    --font-track: calc(var(--layout-unit) * 6);
+    --font-artist: calc(var(--layout-unit) * 4);
+  }
+}
+
+/* Very wide landscape (XL horizontal) */
+@media (min-aspect-ratio: 2/1) {
+  :root {
+    --album-size: calc(var(--layout-unit) * 24);
+    --font-track: calc(var(--layout-unit) * 4.5);
+    --font-artist: calc(var(--layout-unit) * 3);
+  }
+  #content {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: calc(var(--layout-unit) * 2);
+  }
+  #album-art-container {
+    order: -1;
+    flex: 0 0 auto;
+  }
+  #track-info {
+    flex: 1;
+    min-width: 0;
+  }
+  #controls {
+    flex: 0 0 100%;
+  }
+  #progress-container {
+    flex: 0 0 100%;
+    order: 10;
+  }
+  #volume-container {
+    flex: 0 0 40%;
+    order: 11;
+  }
+}
+
+/* Very tall portrait (XL vertical) */
+@media (max-aspect-ratio: 3/5) {
+  :root {
+    --album-size: calc(var(--layout-unit) * 35);
+    --font-track: calc(var(--layout-unit) * 6.5);
+    --font-artist: calc(var(--layout-unit) * 4.5);
+    --space-pad: calc(var(--layout-unit) * 8);
+  }
+}
+
+/* Small screens: hide secondary elements */
+@media (max-height: 400px) {
+  #track-album {
+    display: none;
+  }
+  #volume-container {
+    display: none;
+  }
+  #progress-time {
+    display: none;
+  }
+  :root {
+    --album-size: calc(var(--layout-unit) * 20);
+    --font-track: calc(var(--layout-unit) * 4);
+    --font-artist: calc(var(--layout-unit) * 2.8);
+  }
+}
+
+@media (max-height: 300px) {
+  #track-artist {
+    display: none;
+  }
+  #btn-shuffle,
+  #btn-repeat {
+    display: none;
+  }
+  :root {
+    --album-size: calc(var(--layout-unit) * 16);
+    --font-track: calc(var(--layout-unit) * 3.5);
+  }
+}
+
+@media (max-height: 250px) {
+  #album-art-container {
+    display: none;
+  }
+  #track-name {
+    font-size: calc(var(--layout-unit) * 3);
+  }
+}
+
+/* ── Touch: show thumbs always on touch devices ────────────── */
+@media (hover: none) {
+  #progress-thumb,
+  #volume-thumb {
+    opacity: 0.6;
+  }
+}

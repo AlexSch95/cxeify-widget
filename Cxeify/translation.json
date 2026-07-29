@@ -1,0 +1,18 @@
+{
+  "widget_name": "Cxeify",
+  "Cxeify": "Cxeify",
+  "Widget Personalization": "Widget Personalization",
+  "Server URL": "Server URL",
+  "Update Interval": "Update Interval",
+  "Text Color": "Text Color",
+  "Accent Color": "Accent Color",
+  "Background Color": "Background Color",
+  "Background Transparency": "Background Transparency",
+  "Connecting...": "Connecting...",
+  "Companion Server Offline": "Companion Server Offline",
+  "Start the server on your PC to control Spotify": "Start the server on your PC to control Spotify",
+  "No Spotify Device Found": "No Spotify Device Found",
+  "Open Spotify on any device to start playing": "Open Spotify on any device to start playing",
+  "Not Authorized": "Not Authorized",
+  "Open http://127.0.0.1:3000 to set up Spotify": "Open http://127.0.0.1:3000 to set up Spotify"
+}
