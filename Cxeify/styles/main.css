@@ -477,26 +477,25 @@ body {
   display: none !important;
 }
 
+/* Centered flex column: track info → controls → volume → progress */
 .preview-mode #player {
-  display: block;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3vmin;
+  box-sizing: border-box;
+  padding: 3vmin 4vmin;
 }
 
 .preview-mode #track-info {
-  position: absolute;
-  left: 0;
-  top: 7vmin;
   width: 100%;
   text-align: center;
-  padding: 0 4vmin;
-  box-sizing: border-box;
 }
 
 .preview-mode #track-name {
   font-size: 6vmin;
-  margin-bottom: 1vmin;
-  max-width: 90vmin;
-  margin-left: auto;
-  margin-right: auto;
+  margin-bottom: 0.5vmin;
 }
 
 .preview-mode #track-artist {
@@ -504,18 +503,11 @@ body {
 }
 
 .preview-mode #controls-container {
-  position: absolute;
-  left: 5vmin;
-  top: 24vmin;
-  width: 90vmin;
-  height: auto;
-  box-sizing: border-box;
-  padding: 2vmin;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  gap: 2vmin;
+  gap: 2.5vmin;
+  width: 100%;
 }
 
 .preview-mode #controls {
@@ -566,11 +558,7 @@ body {
 }
 
 .preview-mode #progress-container {
-  position: absolute;
-  left: 0;
-  top: 80vmin;
-  width: 100vmin;
-  padding: 1vmin 0;
+  width: 100%;
 }
 
 .preview-mode #progress-bar {
@@ -585,5 +573,4 @@ body {
 .preview-mode #progress-time {
   margin-top: 0.5vmin;
   font-size: 1.5vmin;
-  padding: 0 3vmin;
 }
