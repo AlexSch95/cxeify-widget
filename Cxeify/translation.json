@@ -18,5 +18,13 @@
   "Size Not Supported": "Size Not Supported",
   "This widget size is not available. Please use Medium or Large.": "This widget size is not available. Please use Medium.",
   "Spotify Client ID": "Spotify Client ID",
-  "Spotify Refresh Token": "Spotify Refresh Token"
+  "Spotify Refresh Token": "Spotify Refresh Token",
+  "Colors": "Colors",
+  "Song Info Color": "Song Info Color",
+  "Play Button Color": "Play Button Color",
+  "Previous/Next Color": "Previous/Next Color",
+  "Shuffle Color": "Shuffle Color",
+  "Repeat Color": "Repeat Color",
+  "Volume Fill Color": "Volume Fill Color",
+  "Progress Fill Color": "Progress Fill Color"
 }

@@ -4,6 +4,13 @@
   --accent-color: #1DB954;
   --background-color: #121212;
   --transparency: 60%;
+  --song-info-color: #ffffff;
+  --play-btn-color: #1DB954;
+  --prev-next-color: #ffffff;
+  --shuffle-color: #ffffff;
+  --repeat-color: #ffffff;
+  --volume-fill-color: #ffffff;
+  --progress-fill-color: #1DB954;
 }
 
 /* ── RESET & BASE ────────────────────────────────────────────── */
@@ -130,6 +137,7 @@ body {
   text-overflow: ellipsis;
   line-height: 1.2;
   margin: 0;
+  color: var(--song-info-color);
 }
 
 #track-artist {
@@ -139,6 +147,7 @@ body {
   text-overflow: ellipsis;
   line-height: 1.3;
   margin: 0;
+  color: var(--song-info-color);
 }
 
 /* ── CONTROLS CONTAINER (for M absolute layout) ───────────────── */
@@ -179,7 +188,7 @@ body {
 }
 
 .ctrl-btn-play {
-  background: var(--accent-color);
+  background: var(--play-btn-color);
   color: #000;
   opacity: 1;
   border-radius: 50%;
@@ -196,6 +205,19 @@ body {
 .ctrl-btn[data-active="true"] {
   opacity: 1;
   color: var(--accent-color);
+}
+
+#btn-shuffle {
+  color: var(--shuffle-color);
+}
+
+#btn-prev,
+#btn-next {
+  color: var(--prev-next-color);
+}
+
+#btn-repeat {
+  color: var(--repeat-color);
 }
 
 #btn-repeat {
@@ -235,7 +257,7 @@ body {
 
 #volume-fill {
   height: 100%;
-  background: var(--text-color);
+  background: var(--volume-fill-color);
   border-radius: 999px;
   width: 100%;
   opacity: 0.5;
@@ -274,7 +296,7 @@ body {
 
 #progress-fill {
   height: 100%;
-  background: var(--accent-color);
+  background: var(--progress-fill-color);
   border-radius: 999px;
   width: 0%;
   transition: width 0.3s linear;

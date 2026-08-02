@@ -18,6 +18,15 @@
   <meta name="x-icue-property" content="backgroundColor" data-label="tr('Background Color')" data-type="color" data-default="'#121212'" />
   <meta name="x-icue-property" content="transparency" data-label="tr('Albumcover Backdrop Transparency')" data-type="slider" data-default="60" data-min="0" data-max="100" data-step="1" data-unit-label="'%'" />
 
+  <!-- Color customization properties -->
+  <meta name="x-icue-property" content="songInfoColor" data-label="tr('Song Info Color')" data-type="color" data-default="'#ffffff'" />
+  <meta name="x-icue-property" content="playBtnColor" data-label="tr('Play Button Color')" data-type="color" data-default="'#1DB954'" />
+  <meta name="x-icue-property" content="prevNextColor" data-label="tr('Previous/Next Color')" data-type="color" data-default="'#ffffff'" />
+  <meta name="x-icue-property" content="shuffleColor" data-label="tr('Shuffle Color')" data-type="color" data-default="'#ffffff'" />
+  <meta name="x-icue-property" content="repeatColor" data-label="tr('Repeat Color')" data-type="color" data-default="'#ffffff'" />
+  <meta name="x-icue-property" content="volumeFillColor" data-label="tr('Volume Fill Color')" data-type="color" data-default="'#ffffff'" />
+  <meta name="x-icue-property" content="progressFillColor" data-label="tr('Progress Fill Color')" data-type="color" data-default="'#1DB954'" />
+
   <!-- Property groups -->
   <script id="x-icue-groups" type="application/json">
   [
@@ -27,7 +36,11 @@
     },
     {
       "title": "tr('Widget Personalization')",
-      "properties": ["textColor", "accentColor", "backgroundColor", "transparency"]
+      "properties": ["backgroundColor", "transparency"]
+    },
+    {
+      "title": "tr('Colors')",
+      "properties": ["songInfoColor", "playBtnColor", "prevNextColor", "shuffleColor", "repeatColor", "volumeFillColor", "progressFillColor"]
     }
   ]
   </script>

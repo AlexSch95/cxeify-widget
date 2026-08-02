@@ -14,6 +14,13 @@ const state = {
   accentColor: '#1DB954',
   backgroundColor: '#121212',
   transparency: 60,
+  songInfoColor: '#ffffff',
+  playBtnColor: '#1DB954',
+  prevNextColor: '#ffffff',
+  shuffleColor: '#ffffff',
+  repeatColor: '#ffffff',
+  volumeFillColor: '#ffffff',
+  progressFillColor: '#1DB954',
 };
 
 let pollTimer = null;
@@ -77,12 +84,26 @@ function applySettings(settings = {}) {
   state.clientId = getIcueProperty('clientId', state.clientId);
   state.refreshToken = getIcueProperty('refreshToken', state.refreshToken);
   state.pollingInterval = getIcueProperty('pollingInterval', state.pollingInterval);
+  state.songInfoColor = getIcueProperty('songInfoColor', state.songInfoColor);
+  state.playBtnColor = getIcueProperty('playBtnColor', state.playBtnColor);
+  state.prevNextColor = getIcueProperty('prevNextColor', state.prevNextColor);
+  state.shuffleColor = getIcueProperty('shuffleColor', state.shuffleColor);
+  state.repeatColor = getIcueProperty('repeatColor', state.repeatColor);
+  state.volumeFillColor = getIcueProperty('volumeFillColor', state.volumeFillColor);
+  state.progressFillColor = getIcueProperty('progressFillColor', state.progressFillColor);
   
   // Apply CSS variables
   document.documentElement.style.setProperty('--text-color', state.textColor);
   document.documentElement.style.setProperty('--accent-color', state.accentColor);
   document.documentElement.style.setProperty('--background-color', state.backgroundColor);
   document.documentElement.style.setProperty('--transparency', state.transparency + '%');
+  document.documentElement.style.setProperty('--song-info-color', state.songInfoColor);
+  document.documentElement.style.setProperty('--play-btn-color', state.playBtnColor);
+  document.documentElement.style.setProperty('--prev-next-color', state.prevNextColor);
+  document.documentElement.style.setProperty('--shuffle-color', state.shuffleColor);
+  document.documentElement.style.setProperty('--repeat-color', state.repeatColor);
+  document.documentElement.style.setProperty('--volume-fill-color', state.volumeFillColor);
+  document.documentElement.style.setProperty('--progress-fill-color', state.progressFillColor);
 
   console.log('[Cxeify] Settings applied:', JSON.stringify(state));
 
