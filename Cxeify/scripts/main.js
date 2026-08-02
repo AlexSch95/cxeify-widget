@@ -13,7 +13,7 @@ const state = {
   textColor: '#ffffff',
   accentColor: '#1DB954',
   backgroundColor: '#121212',
-  transparency: 0,
+  transparency: 60,
 };
 
 let pollTimer = null;

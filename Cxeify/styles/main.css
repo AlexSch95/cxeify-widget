@@ -3,7 +3,7 @@
   --text-color: #ffffff;
   --accent-color: #1DB954;
   --background-color: #121212;
-  --transparency: 0%;
+  --transparency: 60%;
 }
 
 /* ── RESET & BASE ────────────────────────────────────────────── */
@@ -31,7 +31,7 @@ body {
   inset: -30px;
   background-size: cover;
   background-position: center;
-  filter: blur(60px) brightness(0.25);
+  filter: blur(20px) brightness(0.5);
   transition: background-image 0.6s ease;
   z-index: 0;
 }
@@ -104,7 +104,7 @@ body {
   to { transform: rotate(360deg); }
 }
 
-/* ── SIZE UNAVAILABLE ────────────────────────────────────────── */
+/* ── SIZE UNAVAILABLE (default: hidden) ──────────────────────── */
 #size-unavailable {
   display: none;
 }
@@ -115,21 +115,6 @@ body {
   width: 100%;
   height: 100%;
   position: relative;
-}
-
-/* ── ALBUM ART ───────────────────────────────────────────────── */
-#album-art-frame {
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.5);
-  flex-shrink: 0;
-}
-
-#album-art-img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
 }
 
 /* ── TRACK INFO ──────────────────────────────────────────────── */
@@ -335,29 +320,28 @@ body {
     display: block;
   }
 
-  /* ── Cover (30, 30) 250×250 ── */
+  /* ── Album art hidden (artwork is the background) ── */
   #album-art-container {
-    position: absolute;
-    left: 30px;
-    top: 30px;
+    display: none;
   }
 
-  #album-art-frame {
-    width: 250px;
-    height: 250px;
-  }
-
-  /* ── Track info (348, 60) ── */
+  /* ── Track info centered (0, 60) full width ── */
   #track-info {
     position: absolute;
-    left: 348px;
+    left: 0;
     top: 60px;
+    width: 100%;
+    text-align: center;
+    padding: 0 40px;
+    box-sizing: border-box;
   }
 
   #track-name {
     font-size: 48px;
     margin-bottom: 8px;
-    max-width: 460px;
+    max-width: 720px;
+    margin-left: auto;
+    margin-right: auto;
   }
 
   #track-artist {
@@ -453,112 +437,11 @@ body {
 }
 
 /* ══════════════════════════════════════════════════════════════
-   ═══  SIZE L  (1688×696)  ═══
+   ═══  SIZE L  (1688×696) - NOT SUPPORTED  ═══
    ══════════════════════════════════════════════════════════════ */
 @media (min-width: 1200px) and (max-width: 2000px) and (min-height: 550px) {
-  #player {
-    display: grid;
-    grid-template-rows: 1fr auto;
-  }
-
-  #player-main {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    align-items: center;
-    padding: 24px 32px;
-    gap: 32px;
-    min-height: 0;
-  }
-
-  #player-side {
+  #size-unavailable {
     display: flex;
-    flex-direction: column;
-    justify-content: center;
-    min-width: 0;
-  }
-
-  #album-art-container {
-    flex: 0 0 auto;
-  }
-
-  #album-art-frame {
-    width: 210px;
-    height: 210px;
-  }
-
-  #track-name {
-    font-size: 34px;
-    margin-bottom: 6px;
-  }
-
-  #track-artist {
-    font-size: 24px;
-    margin-bottom: 16px;
-  }
-
-  #controls {
-    gap: 18px;
-    margin-bottom: 10px;
-  }
-
-  .ctrl-btn {
-    width: 56px;
-    height: 56px;
-  }
-
-  .ctrl-btn svg {
-    width: 28px;
-    height: 28px;
-  }
-
-  .ctrl-btn-play {
-    width: 72px;
-    height: 72px;
-  }
-
-  .ctrl-btn-play svg {
-    width: 32px;
-    height: 32px;
-  }
-
-  #repeat-indicator {
-    font-size: 10px;
-  }
-
-  #volume-container {
-    gap: 10px;
-  }
-
-  .ctrl-btn-vol svg {
-    width: 24px;
-    height: 24px;
-  }
-
-  #volume-bar {
-    height: 10px;
-  }
-
-  #volume-thumb {
-    width: 22px;
-    height: 22px;
-  }
-
-  #progress-container {
-    padding: 8px 32px 16px;
-  }
-
-  #progress-bar {
-    height: 12px;
-  }
-
-  #progress-thumb {
-    width: 26px;
-    height: 26px;
-  }
-
-  #progress-time {
-    margin-top: 5px;
-    font-size: 13px;
   }
 }
 

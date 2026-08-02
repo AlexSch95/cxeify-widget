@@ -16,7 +16,7 @@
   "Not Authorized": "Not Configured",
   "Open http://127.0.0.1:3000 to set up Spotify": "Set your Spotify Client ID and Refresh Token in the widget settings.",
   "Size Not Supported": "Size Not Supported",
-  "This widget size is not available. Please use Medium or Large.": "This widget size is not available. Please use Medium or Large.",
+  "This widget size is not available. Please use Medium or Large.": "This widget size is not available. Please use Medium.",
   "Spotify Client ID": "Spotify Client ID",
   "Spotify Refresh Token": "Spotify Refresh Token"
 }

@@ -16,7 +16,7 @@
   "supported_devices": [
     {
       "type": "dashboard_lcd",
-      "supportedSizes": ["medium", "large"]
+      "supportedSizes": ["medium"]
     }
   ]
 }
