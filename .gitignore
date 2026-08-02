@@ -15,3 +15,7 @@ server/config.json
 
 # Windows
 Thumbs.db
+
+# Cline AI workspace
+.cline/
+

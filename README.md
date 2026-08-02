@@ -7,7 +7,7 @@ A Spotify controller widget for **Corsair Xeneon Edge** displays.
 Cxeify turns your Xeneon Edge into a Spotify remote control. It consists of two parts:
 
 1. **Widget** (`Cxeify/`) – The iCUE HTML widget that runs on your Xeneon Edge display
-2. **Companion Server** (`server/`) – A lightweight Node.js server that connects to the Spotify API
+2. **Desktop Companion** (`desktop/`) – A lightweight Electron app that connects to the Spotify API
 
 ## Features
 
@@ -17,7 +17,7 @@ Cxeify turns your Xeneon Edge into a Spotify remote control. It consists of two 
 - Album art display with blurred background
 - Automatically detects active Spotify device
 - Touch-optimized for Xeneon Edge displays
-- Works with all Xeneon Edge sizes (S/M/L/XL, horizontal & vertical)
+- Works with Xeneon Edge sizes (S/M/L/XL)
 - Customizable accent color, text color, background & transparency
 - No external services – all data stays local
 
@@ -26,36 +26,16 @@ Cxeify turns your Xeneon Edge into a Spotify remote control. It consists of two 
 ### Prerequisites
 
 - **Corsair iCUE** (v5.45 or newer) with a Xeneon Edge device
-- **Node.js** (v18 or newer) for the companion server
 - **Spotify Premium** account
 
-### Step 1: Start the Companion Server
+### Step 1: Start the Desktop Companion
 
-```bash
-cd server
-npm install
-npm start
-```
+1. Download the latest `cxeify-server.exe` from the [Releases](https://github.com/AlexSch95/cxeify-widget/releases) page
+2. Run the executable – it will start in your system tray
+3. Open `http://127.0.0.1:3000` in your browser
+4. Click **Authorize Spotify** to log in with your Spotify account
 
-You'll see:
-
-```
-╔══════════════════════════════════════════════╗
-║              🎵 Cxeify Server                ║
-║                                              ║
-║  Server running on http://127.0.0.1:3000     ║
-║                                              ║
-║  1. Open http://127.0.0.1:3000 in your       ║
-║     browser to start setup                   ║
-║  2. Authorize with Spotify                   ║
-║  3. Widget connects automatically            ║
-║                                              ║
-╚══════════════════════════════════════════════╝
-```
-
-Open `http://127.0.0.1:3000` in your browser and click **Authorize Spotify** to log in with your Spotify account.
-
-Keep the server running in the background.
+Keep the companion running in the background.
 
 ### Step 2: Install the Widget
 
@@ -91,26 +71,17 @@ In iCUE widget settings you can adjust:
 │   │   └── main.css         # Responsive styling for all Xeneon Edge sizes
 │   └── resources/
 │       └── icon.svg         # Widget icon
-├── server/                  # Companion server (Node.js)
-│   ├── package.json
-│   └── server.js            # Express API + Spotify PKCE OAuth
+├── desktop/                 # Desktop companion (Electron)
+│   ├── main.js              # Electron main process
+│   ├── preload.js           # Preload script
+│   ├── renderer/            # Setup UI
+│   └── package.json
 └── README.md
-```
-
-## Building a Standalone Executable
-
-To create a standalone `.exe` (no Node.js required):
-
-```bash
-npm install -g pkg
-cd server
-pkg server.js --output cxeify-server.exe
 ```
 
 ## Technical Details
 
 - **Authentication**: Spotify OAuth 2.0 with PKCE (no client secret needed)
-- **Token Storage**: `tokens.json` in the server directory
 - **API**: REST endpoints on `http://127.0.0.1:3000/api/*`
 - **Widget Communication**: Polls the server via `fetch()` at the configured interval
 - **All data stays local** – no external services other than Spotify's API
