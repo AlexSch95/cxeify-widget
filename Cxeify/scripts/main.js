@@ -471,7 +471,7 @@ function volumeEnd(e) {
 
 // ── Setup Page ────────────────────────────────────────────────────
 function openSetupPage() {
-  window.open('https://alexsch95.github.io/cxeify-widget/index.html', '_blank');
+  window.location.href = 'https://alexsch95.github.io/cxeify-widget/index.html';
 }
 
 // ── Helpers ───────────────────────────────────────────────────────

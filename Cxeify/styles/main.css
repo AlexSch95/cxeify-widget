@@ -317,18 +317,18 @@ body {
 }
 
 /* ══════════════════════════════════════════════════════════════
-   ═══  SIZE S  (696×416) - NOT SUPPORTED  ═══
+   ═══  SIZE S  (< 700px) - NOT SUPPORTED  ═══
    ══════════════════════════════════════════════════════════════ */
-@media (max-width: 1000px) and (max-height: 500px) {
+@media (max-width: 699px) {
   #size-unavailable {
     display: flex;
   }
 }
 
 /* ══════════════════════════════════════════════════════════════
-   ═══  SIZE M  (840×696)  ═══
+   ═══  SIZE M  (700px - 999px)  ═══
    ══════════════════════════════════════════════════════════════ */
-@media (min-width: 700px) and (max-width: 1000px) and (min-height: 550px) {
+@media (min-width: 700px) and (max-width: 999px) {
   #player {
     display: block;
   }
@@ -450,18 +450,18 @@ body {
 }
 
 /* ══════════════════════════════════════════════════════════════
-   ═══  SIZE L  (1688×696) - NOT SUPPORTED  ═══
+   ═══  SIZE L  (1000px - 1999px) - NOT SUPPORTED  ═══
    ══════════════════════════════════════════════════════════════ */
-@media (min-width: 1200px) and (max-width: 2000px) and (min-height: 550px) {
+@media (min-width: 1000px) and (max-width: 1999px) {
   #size-unavailable {
     display: flex;
   }
 }
 
 /* ══════════════════════════════════════════════════════════════
-   ═══  SIZE XL  (2536×696) - NOT SUPPORTED  ═══
+   ═══  SIZE XL  (≥ 2000px) - NOT SUPPORTED  ═══
    ══════════════════════════════════════════════════════════════ */
-@media (min-width: 2001px) and (min-height: 550px) {
+@media (min-width: 2000px) {
   #size-unavailable {
     display: flex;
   }
