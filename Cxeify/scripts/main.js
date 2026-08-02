@@ -368,11 +368,10 @@ dom.btnShuffle.addEventListener('click', async () => {
 });
 
 dom.btnRepeat.addEventListener('click', async () => {
-  const cycle = { 'false': 'context', 'context': 'track', 'track': 'off' };
   const current = dom.btnRepeat.dataset.active === 'true' 
-    ? (dom.repeatIndicator.hidden ? 'context' : 'track')
+    ? (dom.repeatIndicator.hidden ? 'context' : 'track') 
     : 'off';
-  const next = cycle[current] || 'off';
+  const next = current === 'off' ? 'context' : current === 'context' ? 'track' : 'off';
   await sendControl(`/me/player/repeat?state=${next}`, 'PUT');
   dom.btnRepeat.dataset.active = next !== 'off' ? 'true' : 'false';
   dom.repeatIndicator.hidden = next !== 'track';
