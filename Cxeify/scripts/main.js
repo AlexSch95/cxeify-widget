@@ -1,13 +1,14 @@
 /**
  * Cxeify - Spotify Controller for Xeneon Edge
  * 
- * Communicates with the companion server via HTTP REST API.
- * Handles playback state polling, user controls, and settings.
+ * Communicates directly with the Spotify Web API (no companion server needed).
+ * Uses PKCE OAuth tokens stored in iCUE settings.
  */
 
 // ── State ─────────────────────────────────────────────────────────
 const state = {
-  serverUrl: 'http://127.0.0.1:3000',
+  clientId: '',
+  refreshToken: '',
   pollingInterval: 2000,
   textColor: '#ffffff',
   accentColor: '#1DB954',
@@ -19,6 +20,8 @@ let pollTimer = null;
 let isSeeking = false;
 let isDraggingVolume = false;
 let currentPlayback = null;
+let cachedAccessToken = null;
+let tokenExpiresAt = 0;
 
 // ── DOM References ────────────────────────────────────────────────
 const $ = (id) => document.getElementById(id);
@@ -53,14 +56,12 @@ const dom = {
 };
 
 // ── Settings (from iCUE) ──────────────────────────────────────────
-// Helper: read a global iCUE property variable safely
 function getIcueProperty(name, defaultValue) {
   try {
     if (typeof window !== 'undefined' && name in window) {
       const val = window[name];
       if (val !== undefined && val !== null && val !== '') return val;
     }
-    // Fallback: try via Function constructor (catches bare globals too)
     const val = Function('return typeof ' + name + ' !== "undefined" ? ' + name + ' : undefined')();
     if (val !== undefined && val !== null && val !== '') return val;
   } catch (e) { /* ignore */ }
@@ -68,13 +69,13 @@ function getIcueProperty(name, defaultValue) {
 }
 
 function applySettings(settings = {}) {
-  // Merge settings object, then override with global iCUE variables if available
   Object.assign(state, settings);
   state.textColor = getIcueProperty('textColor', state.textColor);
   state.accentColor = getIcueProperty('accentColor', state.accentColor);
   state.backgroundColor = getIcueProperty('backgroundColor', state.backgroundColor);
   state.transparency = getIcueProperty('transparency', state.transparency);
-  state.serverUrl = getIcueProperty('serverUrl', state.serverUrl);
+  state.clientId = getIcueProperty('clientId', state.clientId);
+  state.refreshToken = getIcueProperty('refreshToken', state.refreshToken);
   state.pollingInterval = getIcueProperty('pollingInterval', state.pollingInterval);
   
   // Apply CSS variables
@@ -93,50 +94,136 @@ function applySettings(settings = {}) {
   startPolling();
 }
 
-// ── API Communication ─────────────────────────────────────────────
-// Auto-detect if we're loaded from the server itself (same origin)
-function getApiBaseUrl() {
-  // If loaded from the widget route on the server, use relative URLs
-  if (window.location.port === '3000' || window.location.hostname === '127.0.0.1') {
-    return '';
+// ── Spotify Token Management ──────────────────────────────────────
+async function refreshAccessToken() {
+  if (!state.clientId || !state.refreshToken) {
+    console.log('[Cxeify] No client ID or refresh token configured');
+    return null;
   }
-  // Otherwise use the configured server URL
-  return state.serverUrl.replace(/\/+$/, '');
-}
 
-async function apiFetch(path, options = {}) {
-  const baseUrl = getApiBaseUrl();
-  const url = `${baseUrl}${path}`;
   try {
-    const response = await fetch(url, {
-      ...options,
-      headers: {
-        'Content-Type': 'application/json',
-        ...options.headers,
-      },
+    const response = await fetch('https://accounts.spotify.com/api/token', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams({
+        grant_type: 'refresh_token',
+        refresh_token: state.refreshToken,
+        client_id: state.clientId,
+      }),
     });
+
     if (!response.ok) {
-      const text = await response.text();
-      console.warn(`API error ${response.status}: ${text}`);
+      const err = await response.text();
+      console.warn('[Cxeify] Token refresh failed:', response.status, err);
       return null;
     }
-    return await response.json();
+
+    const data = await response.json();
+    cachedAccessToken = data.access_token;
+    tokenExpiresAt = Date.now() + (data.expires_in || 3600) * 1000;
+    return cachedAccessToken;
   } catch (e) {
-    // Connection refused = server offline
-    console.warn(`API fetch failed: ${e.message}`);
+    console.warn('[Cxeify] Token refresh error:', e.message);
+    return null;
+  }
+}
+
+async function getValidToken() {
+  // If we have a cached token that's still valid, use it
+  if (cachedAccessToken && Date.now() < tokenExpiresAt - 60000) {
+    return cachedAccessToken;
+  }
+  // Otherwise refresh
+  return await refreshAccessToken();
+}
+
+// ── Spotify API Calls ─────────────────────────────────────────────
+let lastApiError = null;
+
+async function spotifyApi(endpoint, method = 'GET', body = null) {
+  const token = await getValidToken();
+  if (!token) {
+    lastApiError = 'not_authenticated';
+    return null;
+  }
+
+  const options = {
+    method,
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+  };
+  if (body) options.body = JSON.stringify(body);
+
+  try {
+    const response = await fetch(`https://api.spotify.com/v1${endpoint}`, options);
+
+    if (response.status === 401) {
+      // Token expired, try refreshing once
+      const newToken = await refreshAccessToken();
+      if (newToken) {
+        options.headers['Authorization'] = `Bearer ${newToken}`;
+        const retryResp = await fetch(`https://api.spotify.com/v1${endpoint}`, options);
+        lastApiError = null;
+        return retryResp;
+      }
+      lastApiError = 'token_expired';
+      return null;
+    }
+
+    lastApiError = null;
+    return response;
+  } catch (e) {
+    console.warn('[Cxeify] API error:', e.message);
+    lastApiError = 'network_error';
     return null;
   }
 }
 
 async function fetchStatus() {
-  return await apiFetch('/api/status');
+  const response = await spotifyApi('/me/player');
+  if (!response) return { active: false, auth: false, error: lastApiError, data: null };
+  
+  if (response.status === 204) {
+    return { active: false, auth: true, error: 'no_active_device', data: null };
+  }
+
+  try {
+    const data = await response.json();
+    return {
+      active: true,
+      auth: true,
+      data: {
+        is_playing: data.is_playing,
+        progress_ms: data.progress_ms,
+        item: data.item ? {
+          id: data.item.id,
+          name: data.item.name,
+          artists: data.item.artists.map(a => a.name),
+          album: data.item.album.name,
+          album_id: data.item.album.id,
+          duration_ms: data.item.duration_ms,
+          album_art: data.item.album.images?.[0]?.url || null,
+          album_art_small: data.item.album.images?.[1]?.url || null,
+        } : null,
+        device: data.device ? {
+          id: data.device.id,
+          name: data.device.name,
+          type: data.device.type,
+          volume_percent: data.device.volume_percent,
+        } : null,
+        shuffle_state: data.shuffle_state,
+        repeat_state: data.repeat_state,
+      },
+    };
+  } catch (e) {
+    return { active: false, auth: true, error: 'parse_error', data: null };
+  }
 }
 
-async function sendControl(action, body = {}) {
-  return await apiFetch(`/api/${action}`, {
-    method: 'POST',
-    body: JSON.stringify(body),
-  });
+async function sendControl(endpoint, method = 'PUT', body = null) {
+  await spotifyApi(endpoint, method, body);
 }
 
 // ── Polling ───────────────────────────────────────────────────────
@@ -154,17 +241,23 @@ function stopPolling() {
 }
 
 async function poll() {
+  // Check if credentials are configured
+  if (!state.clientId || !state.refreshToken) {
+    console.log('[Cxeify] → Not configured (no clientId or refreshToken)');
+    showState('noauth');
+    return;
+  }
+
   const result = await fetchStatus();
   
   console.log('[Cxeify] Poll result:', JSON.stringify(result));
   
   if (!result) {
-    console.log('[Cxeify] → Server offline (no response)');
+    console.log('[Cxeify] → Network error');
     showState('offline');
     return;
   }
   
-  // Check auth status from server
   if (result.auth === false) {
     console.log('[Cxeify] → Not authenticated');
     showState('noauth');
@@ -184,7 +277,6 @@ async function poll() {
 
 // ── UI State Management ───────────────────────────────────────────
 function showState(name) {
-  // Use a CSS class approach instead of hidden attribute to avoid CSS specificity issues
   const states = ['loading', 'offline', 'nodevice', 'noauth', 'player'];
   states.forEach(s => {
     const el = dom[s];
@@ -218,7 +310,7 @@ function updatePlayback(data) {
     }
   }
   
-  // Play/Pause button - use state-hidden class for reliable toggling
+  // Play/Pause button
   if (data.is_playing) {
     dom.playIcon.classList.add('state-hidden');
     dom.pauseIcon.classList.remove('state-hidden');
@@ -253,40 +345,35 @@ function updatePlayback(data) {
 }
 
 // ── Controls ──────────────────────────────────────────────────────
-// Play/Pause
 dom.btnPlay.addEventListener('click', async () => {
   if (currentPlayback?.is_playing) {
-    await sendControl('pause');
+    await sendControl('/me/player/pause', 'PUT');
   } else {
-    await sendControl('play');
+    await sendControl('/me/player/play', 'PUT');
   }
 });
 
-// Next
 dom.btnNext.addEventListener('click', async () => {
-  await sendControl('next');
+  await sendControl('/me/player/next', 'POST');
 });
 
-// Previous
 dom.btnPrev.addEventListener('click', async () => {
-  await sendControl('previous');
+  await sendControl('/me/player/previous', 'POST');
 });
 
-// Shuffle
 dom.btnShuffle.addEventListener('click', async () => {
   const newState = dom.btnShuffle.dataset.active !== 'true';
-  await sendControl('shuffle', { state: newState });
+  await sendControl(`/me/player/shuffle?state=${newState}`, 'PUT');
   dom.btnShuffle.dataset.active = newState ? 'true' : 'false';
 });
 
-// Repeat
 dom.btnRepeat.addEventListener('click', async () => {
   const cycle = { 'false': 'context', 'context': 'track', 'track': 'off' };
   const current = dom.btnRepeat.dataset.active === 'true' 
     ? (dom.repeatIndicator.hidden ? 'context' : 'track')
     : 'off';
   const next = cycle[current] || 'off';
-  await sendControl('repeat', { state: next });
+  await sendControl(`/me/player/repeat?state=${next}`, 'PUT');
   dom.btnRepeat.dataset.active = next !== 'off' ? 'true' : 'false';
   dom.repeatIndicator.hidden = next !== 'track';
 });
@@ -323,7 +410,7 @@ function seekEnd(e) {
   
   if (seekPending != null && currentPlayback?.item?.duration_ms) {
     const pos = Math.round(seekPending * currentPlayback.item.duration_ms);
-    sendControl('seek', { position_ms: pos });
+    sendControl(`/me/player/seek?position_ms=${pos}`, 'PUT');
     seekPending = null;
   }
 }
@@ -354,7 +441,7 @@ function volumeEnd(e) {
   isDraggingVolume = false;
   
   if (volumePending != null) {
-    sendControl('volume', { volume_percent: volumePending });
+    sendControl(`/me/player/volume?volume_percent=${volumePending}`, 'PUT');
     volumePending = null;
   }
 }

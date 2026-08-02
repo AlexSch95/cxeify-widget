@@ -8,7 +8,8 @@
   <link rel="stylesheet" href="styles/main.css" />
 
   <!-- Widget configuration properties -->
-  <meta name="x-icue-property" content="serverUrl" data-label="tr('Server URL')" data-type="textfield" data-default="'http://127.0.0.1:3000'" />
+  <meta name="x-icue-property" content="clientId" data-label="tr('Spotify Client ID')" data-type="textfield" data-default="''" />
+  <meta name="x-icue-property" content="refreshToken" data-label="tr('Spotify Refresh Token')" data-type="textfield" data-default="''" />
   <meta name="x-icue-property" content="pollingInterval" data-label="tr('Update Interval')" data-type="slider" data-default="2000" data-min="500" data-max="5000" data-step="100" data-unit-label="'ms'" />
 
   <!-- Personalization properties -->
@@ -22,7 +23,7 @@
   [
     {
       "title": "tr('Cxeify')",
-      "properties": ["serverUrl", "pollingInterval"]
+      "properties": ["clientId", "refreshToken", "pollingInterval"]
     },
     {
       "title": "tr('Widget Personalization')",
@@ -53,8 +54,8 @@
           <line x1="12" y1="17" x2="12.01" y2="17"/>
         </svg>
       </div>
-      <h2>Companion Server Offline</h2>
-      <p>Start the server on your PC to control Spotify</p>
+      <h2>Connection Error</h2>
+      <p>Check your internet connection and Spotify credentials.</p>
     </div>
 
     <!-- No device state -->
@@ -78,8 +79,8 @@
           <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
         </svg>
       </div>
-      <h2>Not Authorized</h2>
-      <p>Open http://127.0.0.1:3000 to set up Spotify</p>
+      <h2>Not Configured</h2>
+      <p>Set your Spotify Client ID and Refresh Token in the widget settings.</p>
     </div>
 
     <!-- Player UI -->
