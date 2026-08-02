@@ -33,7 +33,6 @@ const dom = {
   albumImg: $('album-art-img'),
   trackName: $('track-name'),
   trackArtist: $('track-artist'),
-  trackAlbum: $('track-album'),
   progressBar: $('progress-bar'),
   progressFill: $('progress-fill'),
   progressThumb: $('progress-thumb'),
@@ -210,7 +209,6 @@ function updatePlayback(data) {
   if (data.item) {
     dom.trackName.textContent = data.item.name || '-';
     dom.trackArtist.textContent = data.item.artists ? data.item.artists.join(', ') : '-';
-    dom.trackAlbum.textContent = data.item.album || '-';
     
     // Album art
     const artUrl = data.item.album_art || data.item.album_art_small;
@@ -220,13 +218,13 @@ function updatePlayback(data) {
     }
   }
   
-  // Play/Pause button
+  // Play/Pause button - use state-hidden class for reliable toggling
   if (data.is_playing) {
-    dom.playIcon.hidden = true;
-    dom.pauseIcon.hidden = false;
+    dom.playIcon.classList.add('state-hidden');
+    dom.pauseIcon.classList.remove('state-hidden');
   } else {
-    dom.playIcon.hidden = false;
-    dom.pauseIcon.hidden = true;
+    dom.playIcon.classList.remove('state-hidden');
+    dom.pauseIcon.classList.add('state-hidden');
   }
   
   // Progress (only if not seeking)

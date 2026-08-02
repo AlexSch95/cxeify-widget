@@ -1,1 +1,17 @@
-nul
+# Node modules
+node_modules/
+server/node_modules/
+desktop/node_modules/
+
+# Build output
+desktop/dist/
+
+# Server data files
+server/tokens.json
+server/config.json
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db

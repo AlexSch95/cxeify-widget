@@ -14,5 +14,7 @@
   "No Spotify Device Found": "No Spotify Device Found",
   "Open Spotify on any device to start playing": "Open Spotify on any device to start playing",
   "Not Authorized": "Not Authorized",
-  "Open http://127.0.0.1:3000 to set up Spotify": "Open http://127.0.0.1:3000 to set up Spotify"
+  "Open http://127.0.0.1:3000 to set up Spotify": "Open http://127.0.0.1:3000 to set up Spotify",
+  "Size Not Supported": "Size Not Supported",
+  "This widget size is not available. Please use Medium or Large.": "This widget size is not available. Please use Medium or Large."
 }

@@ -3,7 +3,7 @@
   "id": "com.widget.cxeify",
   "name": "Cxeify",
   "description": "Spotify controller for Xeneon Edge displays",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "preview_icon": "resources/icon.svg",
   "min_app_version": "5.45",
   "min_framework_version": "1.0.0",
@@ -15,7 +15,8 @@
   "interactive": true,
   "supported_devices": [
     {
-      "type": "dashboard_lcd"
+      "type": "dashboard_lcd",
+      "supportedSizes": ["medium", "large"]
     }
   ]
 }
