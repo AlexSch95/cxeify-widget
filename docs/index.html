@@ -16,12 +16,73 @@
       align-items: center;
       min-height: 100vh;
       margin: 0;
-      padding: 40px;
+      padding: 80px 40px 40px;
     }
 
     .container {
       max-width: 720px;
       width: 100%;
+    }
+
+    /* ── Navbar ──────────────────────────────────────────────────── */
+    .navbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 40px;
+      border-bottom: 1px solid #1a1a1a;
+      background: #0a0a0a;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 999;
+    }
+
+    .navbar-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: #ffffff;
+    }
+
+    .navbar-brand img {
+      width: 32px;
+      height: 32px;
+      border-radius: 6px;
+    }
+
+    .navbar-brand span {
+      font-size: 18px;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+    }
+
+    .navbar-links {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .navbar-links a {
+      color: #888888;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      padding: 8px 16px;
+      border-radius: 8px;
+      transition: all 0.15s ease;
+    }
+
+    .navbar-links a:hover {
+      color: #ffffff;
+      background: #141414;
+    }
+
+    .navbar-links a.active {
+      color: #ffffff;
+      background: #141414;
     }
 
     /* ── Header ──────────────────────────────────────────────────── */
@@ -515,7 +576,8 @@
 
     /* ── Responsive ──────────────────────────────────────────────── */
     @media (max-width: 600px) {
-      body { padding: 20px; }
+      body { padding: 70px 20px 20px; }
+      .navbar { padding: 12px 20px; }
       .container { max-width: 100%; }
       .card { padding: 20px; }
       .privacy-card { padding: 32px 24px; }
@@ -526,6 +588,18 @@
   </style>
 </head>
 <body>
+  <!-- Navbar -->
+  <nav class="navbar">
+    <a href="landing.html" class="navbar-brand">
+      <img src="icon.ico" alt="Cxeify" />
+      <span>Cxeify</span>
+    </a>
+    <div class="navbar-links">
+      <a href="landing.html">Home</a>
+      <a href="index.html" class="active">Setup</a>
+    </div>
+  </nav>
+
   <!-- Privacy Notice Overlay -->
   <div id="privacy-overlay">
     <div class="privacy-card">
