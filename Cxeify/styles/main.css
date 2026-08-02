@@ -191,14 +191,14 @@ body {
   color: var(--play-btn-icon-color);
   opacity: 1;
   border-radius: 50%;
-  box-shadow: 0 0 12px rgba(29, 185, 84, 0.3);
+  box-shadow: 0 0 12px color-mix(in srgb, var(--play-btn-color) 50%, transparent);
   transition: transform 0.1s, box-shadow 0.15s;
 }
 
 .ctrl-btn-play:hover,
 .ctrl-btn-play:active {
   opacity: 1;
-  box-shadow: 0 0 20px rgba(29, 185, 84, 0.5);
+  box-shadow: 0 0 20px color-mix(in srgb, var(--play-btn-color) 70%, transparent);
 }
 
 .ctrl-btn[data-active="true"] {
@@ -296,7 +296,7 @@ body {
 #progress-thumb {
   position: absolute;
   top: 50%;
-  background: var(--accent-color);
+  background: var(--bar-fill-color);
   border-radius: 50%;
   transform: translate(-50%, -50%);
   opacity: 0;
@@ -331,11 +331,6 @@ body {
 @media (min-width: 700px) and (max-width: 999px) {
   #player {
     display: block;
-  }
-
-  /* ── Album art hidden (artwork is the background) ── */
-  #album-art-container {
-    display: none;
   }
 
   /* ── Track info centered (0, 60) full width ── */

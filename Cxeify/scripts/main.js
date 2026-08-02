@@ -29,35 +29,31 @@ let cachedAccessToken = null;
 let tokenExpiresAt = 0;
 
 // ── DOM References ────────────────────────────────────────────────
-const $ = (id) => document.getElementById(id);
-
 const dom = {
-  loading: $('state-loading'),
-  offline: $('state-offline'),
-  nodevice: $('state-nodevice'),
-  noauth: $('state-noauth'),
-  player: $('player'),
-  albumBg: $('album-bg'),
-  albumImg: $('album-art-img'),
-  trackName: $('track-name'),
-  trackArtist: $('track-artist'),
-  progressBar: $('progress-bar'),
-  progressFill: $('progress-fill'),
-  progressThumb: $('progress-thumb'),
-  timeCurrent: $('time-current'),
-  timeTotal: $('time-total'),
-  playIcon: $('play-icon'),
-  pauseIcon: $('pause-icon'),
-  btnPlay: $('btn-play'),
-  btnPrev: $('btn-prev'),
-  btnNext: $('btn-next'),
-  btnShuffle: $('btn-shuffle'),
-  btnRepeat: $('btn-repeat'),
-  repeatIndicator: $('repeat-indicator'),
-  volumeBar: $('volume-bar'),
-  volumeFill: $('volume-fill'),
-  volumeThumb: $('volume-thumb'),
-  volIcon: $('vol-icon'),
+  loading: document.getElementById('state-loading'),
+  offline: document.getElementById('state-offline'),
+  nodevice: document.getElementById('state-nodevice'),
+  noauth: document.getElementById('state-noauth'),
+  player: document.getElementById('player'),
+  albumBg: document.getElementById('album-bg'),
+  trackName: document.getElementById('track-name'),
+  trackArtist: document.getElementById('track-artist'),
+  progressBar: document.getElementById('progress-bar'),
+  progressFill: document.getElementById('progress-fill'),
+  progressThumb: document.getElementById('progress-thumb'),
+  timeCurrent: document.getElementById('time-current'),
+  timeTotal: document.getElementById('time-total'),
+  playIcon: document.getElementById('play-icon'),
+  pauseIcon: document.getElementById('pause-icon'),
+  btnPlay: document.getElementById('btn-play'),
+  btnPrev: document.getElementById('btn-prev'),
+  btnNext: document.getElementById('btn-next'),
+  btnShuffle: document.getElementById('btn-shuffle'),
+  btnRepeat: document.getElementById('btn-repeat'),
+  repeatIndicator: document.getElementById('repeat-indicator'),
+  volumeBar: document.getElementById('volume-bar'),
+  volumeFill: document.getElementById('volume-fill'),
+  volumeThumb: document.getElementById('volume-thumb'),
 };
 
 // ── Settings (from iCUE) ──────────────────────────────────────────
@@ -160,12 +156,9 @@ async function getValidToken() {
 }
 
 // ── Spotify API Calls ─────────────────────────────────────────────
-let lastApiError = null;
-
 async function spotifyApi(endpoint, method = 'GET', body = null) {
   const token = await getValidToken();
   if (!token) {
-    lastApiError = 'not_authenticated';
     return null;
   }
 
@@ -186,29 +179,24 @@ async function spotifyApi(endpoint, method = 'GET', body = null) {
       const newToken = await refreshAccessToken();
       if (newToken) {
         options.headers['Authorization'] = `Bearer ${newToken}`;
-        const retryResp = await fetch(`https://api.spotify.com/v1${endpoint}`, options);
-        lastApiError = null;
-        return retryResp;
+        return await fetch(`https://api.spotify.com/v1${endpoint}`, options);
       }
-      lastApiError = 'token_expired';
       return null;
     }
 
-    lastApiError = null;
     return response;
   } catch (e) {
     console.warn('[Cxeify] API error:', e.message);
-    lastApiError = 'network_error';
     return null;
   }
 }
 
 async function fetchStatus() {
   const response = await spotifyApi('/me/player');
-  if (!response) return { active: false, auth: false, error: lastApiError, data: null };
+  if (!response) return { active: false, auth: false, data: null };
   
   if (response.status === 204) {
-    return { active: false, auth: true, error: 'no_active_device', data: null };
+    return { active: false, auth: true, data: null };
   }
 
   try {
@@ -223,16 +211,10 @@ async function fetchStatus() {
           id: data.item.id,
           name: data.item.name,
           artists: data.item.artists.map(a => a.name),
-          album: data.item.album.name,
-          album_id: data.item.album.id,
           duration_ms: data.item.duration_ms,
           album_art: data.item.album.images?.[0]?.url || null,
-          album_art_small: data.item.album.images?.[1]?.url || null,
         } : null,
         device: data.device ? {
-          id: data.device.id,
-          name: data.device.name,
-          type: data.device.type,
           volume_percent: data.device.volume_percent,
         } : null,
         shuffle_state: data.shuffle_state,
@@ -240,7 +222,7 @@ async function fetchStatus() {
       },
     };
   } catch (e) {
-    return { active: false, auth: true, error: 'parse_error', data: null };
+    return { active: false, auth: true, data: null };
   }
 }
 
@@ -255,44 +237,30 @@ function startPolling() {
   pollTimer = setInterval(poll, state.pollingInterval);
 }
 
-function stopPolling() {
-  if (pollTimer) {
-    clearInterval(pollTimer);
-    pollTimer = null;
-  }
-}
-
 async function poll() {
   // Check if credentials are configured
   if (!state.clientId || !state.refreshToken) {
-    console.log('[Cxeify] → Not configured (no clientId or refreshToken)');
     showState('noauth');
     return;
   }
 
   const result = await fetchStatus();
   
-  console.log('[Cxeify] Poll result:', JSON.stringify(result));
-  
   if (!result) {
-    console.log('[Cxeify] → Network error');
     showState('offline');
     return;
   }
   
   if (result.auth === false) {
-    console.log('[Cxeify] → Not authenticated');
     showState('noauth');
     return;
   }
   
   if (!result.active || !result.data) {
-    console.log('[Cxeify] → No active device');
     showState('nodevice');
     return;
   }
   
-  console.log('[Cxeify] → Player active, updating UI');
   updatePlayback(result.data);
   showState('player');
 }
@@ -312,7 +280,6 @@ function showState(name) {
       }
     }
   });
-  console.log('[Cxeify] showState:', name);
 }
 
 // ── Playback Update ───────────────────────────────────────────────
@@ -324,10 +291,9 @@ function updatePlayback(data) {
     dom.trackName.textContent = data.item.name || '-';
     dom.trackArtist.textContent = data.item.artists ? data.item.artists.join(', ') : '-';
     
-    // Album art
-    const artUrl = data.item.album_art || data.item.album_art_small;
+    // Album art background
+    const artUrl = data.item.album_art;
     if (artUrl) {
-      dom.albumImg.src = artUrl;
       dom.albumBg.style.backgroundImage = `url('${artUrl}')`;
     }
   }
@@ -424,7 +390,7 @@ function seekMove(e) {
   seekPending = x;
 }
 
-function seekEnd(e) {
+function seekEnd() {
   document.removeEventListener('pointermove', seekMove);
   document.removeEventListener('pointerup', seekEnd);
   isSeeking = false;
@@ -456,7 +422,7 @@ function volumeMove(e) {
   volumePending = Math.round(x * 100);
 }
 
-function volumeEnd(e) {
+function volumeEnd() {
   document.removeEventListener('pointermove', volumeMove);
   document.removeEventListener('pointerup', volumeEnd);
   isDraggingVolume = false;
