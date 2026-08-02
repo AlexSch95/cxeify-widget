@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Cxeify - Spotify Setup</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #121212; color: #fff; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px; }
+    .card { background: #1e1e1e; padding: 40px; border-radius: 16px; text-align: center; max-width: 520px; width: 100%; }
+    h1 { color: #1DB954; margin: 0 0 4px; font-size: 28px; }
+    .subtitle { color: #b3b3b3; margin: 0 0 8px; font-size: 14px; }
+    .step { background: #2a2a2a; border-radius: 12px; padding: 20px; margin-bottom: 16px; text-align: left; }
+    .step h3 { font-size: 14px; color: #1DB954; margin-bottom: 8px; }
+    .step p { font-size: 13px; color: #b3b3b3; margin-bottom: 8px; line-height: 1.5; }
+    label { display: block; font-size: 12px; color: #888; margin-bottom: 4px; }
+    input { width: 100%; padding: 10px 14px; border-radius: 8px; border: 1px solid #444; background: #1e1e1e; color: #fff; font-size: 14px; outline: none; }
+    input:focus { border-color: #1DB954; }
+    button { display: inline-block; padding: 10px 24px; background: #1DB954; color: #000; border: none; border-radius: 24px; font-weight: 600; font-size: 14px; cursor: pointer; margin-top: 8px; }
+    button:hover { background: #1ed760; }
+    button:disabled { opacity: 0.5; cursor: not-allowed; }
+    code { background: #333; padding: 2px 6px; border-radius: 4px; font-size: 12px; color: #ddd; }
+    a { color: #1DB954; }
+    .msg { font-size: 13px; margin-top: 8px; min-height: 20px; }
+    .msg.success { color: #1DB954; }
+    .msg.error { color: #ff6666; }
+    .msg.info { color: #ffaa00; }
+    .token-box { background: #1a1a1a; border: 1px solid #333; border-radius: 8px; padding: 12px; font-family: monospace; font-size: 12px; word-break: break-all; color: #b3b3b3; margin-top: 8px; user-select: all; }
+    .token-box strong { color: #1DB954; display: block; margin-bottom: 4px; }
+    .badge { display: inline-block; padding: 4px 12px; border-radius: 12px; font-size: 12px; margin-bottom: 12px; }
+    .badge.ok { background: #1DB95422; color: #1DB954; border: 1px solid #1DB95444; }
+    .badge.warn { background: #ffaa0022; color: #ffaa00; border: 1px solid #ffaa0044; }
+    .badge.no { background: #ff444422; color: #ff6666; border: 1px solid #ff444444; }
+    .hidden { display: none; }
+    .hint { font-size: 11px; color: #666; margin-top: 16px; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>🎵 Cxeify</h1>
+    <p class="subtitle">Spotify Widget for Corsair Xeneon Edge</p>
+    <p style="font-size:12px;color:#666;margin-bottom:16px;">One-time setup to get your Spotify Refresh Token</p>
+
+    <div id="badge" class="badge no">Step 1: Configure Client ID</div>
+
+    <!-- Step 1: Client ID -->
+    <div class="step">
+      <h3>Step 1: Spotify Client ID</h3>
+      <p>1. Go to <a href="https://developer.spotify.com/dashboard" target="_blank">developer.spotify.com/dashboard</a></p>
+      <p>2. Create an App (or use existing)</p>
+      <p>3. In App Settings, add this <strong>Redirect URI</strong>:</p>
+      <p style="text-align:center;margin:8px 0;">
+        <code id="redirectUri">loading...</code>
+      </p>
+      <label for="clientId">Enter your Spotify Client ID:</label>
+      <input type="text" id="clientId" placeholder="e.g. 123abc..." />
+      <div id="configMsg" class="msg"></div>
+    </div>
+
+    <!-- Step 2: Authorize -->
+    <div class="step" id="step2">
+      <h3>Step 2: Authorize with Spotify</h3>
+      <p>Grant access to control your Spotify playback.</p>
+      <button id="authBtn" onclick="authorizeSpotify()" disabled>Authorize with Spotify</button>
+      <div id="authMsg" class="msg"></div>
+    </div>
+
+    <!-- Step 3: Copy Token -->
+    <div class="step" id="step3" style="display:none;">
+      <h3>✅ Step 3: Copy to Widget</h3>
+      <p>Copy these values into your iCUE widget settings:</p>
+      
+      <div class="token-box">
+        <strong>Client ID</strong>
+        <span id="resultClientId">-</span>
+      </div>
+      <div class="token-box" style="margin-top:8px;">
+        <strong>Refresh Token</strong>
+        <span id="resultRefreshToken">-</span>
+      </div>
+      
+      <p style="font-size:12px;color:#b3b3b3;margin-top:12px;">
+        Open iCUE → Xeneon Edge → Widget Settings → Enter Client ID and Refresh Token
+      </p>
+    </div>
+
+    <p class="hint">This page does not store any data. Everything runs locally in your browser.</p>
+  </div>
+
+  <script>
+    // Determine the callback URL (this page's directory + callback.html)
+    const callbackUrl = window.location.href.replace(/\/[^/]*$/, '/callback.html');
+    document.getElementById('redirectUri').textContent = callbackUrl;
+
+    // PKCE helpers
+    function generateCodeVerifier() {
+      const array = new Uint8Array(32);
+      crypto.getRandomValues(array);
+      return btoa(String.fromCharCode(...array))
+        .replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+    }
+
+    async function generateCodeChallenge(verifier) {
+      const encoder = new TextEncoder();
+      const data = encoder.encode(verifier);
+      const hash = await crypto.subtle.digest('SHA-256', data);
+      return btoa(String.fromCharCode(...new Uint8Array(hash)))
+        .replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+    }
+
+    // Check if we have a stored client ID
+    const savedClientId = localStorage.getItem('cxeify_client_id');
+    if (savedClientId) {
+      document.getElementById('clientId').value = savedClientId;
+      document.getElementById('authBtn').disabled = false;
+      document.getElementById('badge').className = 'badge warn';
+      document.getElementById('badge').textContent = 'Step 2: Authorize with Spotify';
+    }
+
+    // Save Client ID
+    document.getElementById('clientId').addEventListener('input', function() {
+      const val = this.value.trim();
+      if (val.length > 10) {
+        localStorage.setItem('cxeify_client_id', val);
+        document.getElementById('authBtn').disabled = false;
+        document.getElementById('badge').className = 'badge warn';
+        document.getElementById('badge').textContent = 'Step 2: Authorize with Spotify';
+        document.getElementById('configMsg').className = 'msg success';
+        document.getElementById('configMsg').textContent = '✅ Client ID saved. Proceed to Step 2.';
+      }
+    });
+
+    // Check for result from callback (via URL hash)
+    function checkForResult() {
+      const params = new URLSearchParams(window.location.search);
+      const clientId = params.get('clientId');
+      const refreshToken = params.get('refreshToken');
+      const error = params.get('error');
+      
+      if (error) {
+        document.getElementById('authMsg').className = 'msg error';
+        document.getElementById('authMsg').textContent = '❌ ' + decodeURIComponent(error);
+        return;
+      }
+      
+      if (clientId && refreshToken) {
+        document.getElementById('resultClientId').textContent = clientId;
+        document.getElementById('resultRefreshToken').textContent = refreshToken;
+        document.getElementById('step3').style.display = 'block';
+        document.getElementById('badge').className = 'badge ok';
+        document.getElementById('badge').textContent = '✅ Setup complete!';
+        document.getElementById('step2').style.display = 'none';
+        
+        // Clean URL
+        window.history.replaceState({}, document.title, window.location.pathname);
+      }
+    }
+
+    async function authorizeSpotify() {
+      const clientId = document.getElementById('clientId').value.trim();
+      if (!clientId) {
+        document.getElementById('authMsg').className = 'msg error';
+        document.getElementById('authMsg').textContent = '❌ Please enter your Client ID first.';
+        return;
+      }
+
+      const authMsg = document.getElementById('authMsg');
+      authMsg.className = 'msg info';
+      authMsg.textContent = '⏳ Generating authorization URL...';
+
+      try {
+        const verifier = generateCodeVerifier();
+        const challenge = await generateCodeChallenge(verifier);
+        
+        // Store verifier in localStorage (will be read by callback page)
+        localStorage.setItem('cxeify_code_verifier', verifier);
+        localStorage.setItem('cxeify_client_id', clientId);
+
+        const params = new URLSearchParams({
+          response_type: 'code',
+          client_id: clientId,
+          scope: [
+            'user-read-playback-state',
+            'user-modify-playback-state',
+            'user-read-currently-playing',
+            'playlist-read-private',
+            'playlist-read-collaborative',
+          ].join(' '),
+          redirect_uri: callbackUrl,
+          code_challenge_method: 'S256',
+          code_challenge: challenge,
+        });
+
+        const authUrl = `https://accounts.spotify.com/authorize?${params.toString()}`;
+        
+        // Redirect to Spotify
+        window.location.href = authUrl;
+      } catch (e) {
+        authMsg.className = 'msg error';
+        authMsg.textContent = '❌ Error: ' + e.message;
+      }
+    }
+
+    // Run on load
+    checkForResult();
+  </script>
+</body>
+</html>
