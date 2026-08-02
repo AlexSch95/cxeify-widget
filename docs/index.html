@@ -609,7 +609,11 @@
       <p class="instruction">
         6. Under <strong>"Redirect URIs"</strong>, add this exact URL:
       </p>
-      <div class="instruction-box" id="redirectUri">loading...</div>
+      <div class="token-row" style="margin-top:4px;margin-bottom:14px;">
+        <span class="token-label">Redirect URI</span>
+        <span class="token-value" id="redirectUri">loading...</span>
+        <button class="btn-copy" id="copyRedirectUri" onclick="copyToClipboard('redirectUri', this)">Copy</button>
+      </div>
       <p class="instruction">
         7. Click <strong>"Add"</strong>, then scroll down and click <strong>"Save"</strong>.
       </p>
