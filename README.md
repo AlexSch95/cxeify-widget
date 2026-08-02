@@ -67,8 +67,9 @@ No companion server or desktop app is required. The widget communicates directly
 │   │   └── main.css          # Responsive styling for Xeneon Edge sizes
 │   └── resources/
 │       └── icon.svg          # Widget icon
-├── docs/                     # OAuth Setup Page
-│   ├── index.html            # Setup wizard (open in browser)
+├── docs/                     # Landing & Setup Pages
+│   ├── index.html            # Landing page (open in browser)
+│   ├── setup.html            # OAuth setup wizard
 │   ├── callback.html         # OAuth callback handler
 │   └── icon.ico              # Page icon
 └── README.md

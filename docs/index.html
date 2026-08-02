@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Cxeify - Spotify Setup</title>
+  <title>Cxeify - Spotify Widget for Xeneon Edge</title>
   <link rel="icon" href="icon.ico" type="image/x-icon" />
   <style>
     * { box-sizing: border-box; margin: 0; }
@@ -11,17 +11,8 @@
       font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
       background: #0a0a0a;
       color: #ffffff;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
       margin: 0;
-      padding: 80px 40px 40px;
-    }
-
-    .container {
-      max-width: 720px;
-      width: 100%;
+      padding: 0;
     }
 
     /* ── Navbar ──────────────────────────────────────────────────── */
@@ -32,11 +23,6 @@
       padding: 16px 40px;
       border-bottom: 1px solid #1a1a1a;
       background: #0a0a0a;
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      z-index: 999;
     }
 
     .navbar-brand {
@@ -85,204 +71,84 @@
       background: #141414;
     }
 
-    /* ── Header ──────────────────────────────────────────────────── */
-    .header {
+    /* ── Hero Section ────────────────────────────────────────────── */
+    .hero {
       display: flex;
+      flex-direction: column;
       align-items: center;
-      gap: 16px;
-      margin-bottom: 32px;
+      text-align: center;
+      padding: 100px 40px 60px;
+      max-width: 800px;
+      margin: 0 auto;
     }
 
-    .header-icon {
-      width: 48px;
-      height: 48px;
-      border-radius: 10px;
+    .hero-icon {
+      width: 80px;
+      height: 80px;
+      border-radius: 18px;
+      overflow: hidden;
+      margin-bottom: 28px;
       display: flex;
       align-items: center;
       justify-content: center;
-      flex-shrink: 0;
-      overflow: hidden;
+      background: #141414;
+      border: 1px solid #1a1a1a;
     }
 
-    .header-icon img {
+    .hero-icon img {
       width: 100%;
       height: 100%;
       object-fit: contain;
     }
 
-    .header-info {
-      flex: 1;
-      min-width: 0;
+    .hero h1 {
+      font-size: 48px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+      margin-bottom: 16px;
+      background: linear-gradient(135deg, #ffffff 0%, #888888 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
     }
 
-    .header-title {
-      font-size: 22px;
-      font-weight: 600;
-      letter-spacing: -0.01em;
-      color: #ffffff;
-      line-height: 1.3;
+    .hero p {
+      font-size: 18px;
+      color: #666666;
+      line-height: 1.6;
+      max-width: 600px;
+      margin-bottom: 40px;
     }
 
-    .header-subtitle {
-      font-size: 14px;
-      color: #555555;
-      font-weight: 400;
-      line-height: 1.3;
+    .hero-badges {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-bottom: 48px;
     }
 
-    .header-badge {
+    .hero-badge {
       display: flex;
       align-items: center;
-      gap: 8px;
-      font-size: 12px;
-      color: #666666;
-      padding: 6px 14px;
+      gap: 6px;
+      font-size: 13px;
+      color: #888888;
+      padding: 8px 16px;
       border: 1px solid #1a1a1a;
       border-radius: 8px;
-      white-space: nowrap;
-    }
-
-    .badge-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: #333333;
-    }
-
-    .badge-dot.ok { background: #1DB954; box-shadow: 0 0 6px rgba(29,185,84,0.4); }
-    .badge-dot.warn { background: #ffaa00; box-shadow: 0 0 6px rgba(255,170,0,0.3); }
-    .badge-dot.no { background: #ff4444; box-shadow: 0 0 6px rgba(255,68,68,0.3); }
-
-    /* ── Card ────────────────────────────────────────────────────── */
-    .card {
       background: #141414;
-      border: 1px solid #1a1a1a;
-      border-radius: 12px;
-      padding: 28px 32px;
-      margin-bottom: 16px;
     }
 
-    .card-title {
-      font-size: 15px;
-      font-weight: 600;
-      color: #ffffff;
-      margin-bottom: 20px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .card-title .step-num {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 24px;
-      height: 24px;
-      border-radius: 50%;
-      background: #1DB954;
-      color: #0a0a0a;
-      font-size: 12px;
-      font-weight: 700;
+    .hero-badge svg {
+      width: 16px;
+      height: 16px;
       flex-shrink: 0;
     }
 
-    .card-title .step-num.done {
-      background: #1DB954;
-    }
-
-    .card-title .step-num.inactive {
-      background: #2a2a2a;
-      color: #555555;
-    }
-
-    /* ── Instructions ────────────────────────────────────────────── */
-    .instruction {
-      font-size: 14px;
-      color: #888888;
-      line-height: 1.7;
-      margin-bottom: 8px;
-      padding-left: 20px;
-      position: relative;
-    }
-
-    .instruction::before {
-      content: '';
-      position: absolute;
-      left: 0;
-      top: 10px;
-      width: 5px;
-      height: 5px;
-      border-radius: 50%;
-      background: #333333;
-    }
-
-    .instruction strong {
-      color: #cccccc;
-    }
-
-    .instruction code {
-      background: #0a0a0a;
-      padding: 2px 8px;
-      border-radius: 4px;
-      font-size: 13px;
+    .hero-badge .highlight {
       color: #1DB954;
-      font-family: 'JetBrains Mono', 'Consolas', 'Courier New', monospace;
-    }
-
-    .instruction .highlight {
-      color: #1DB954;
-      font-weight: 500;
-    }
-
-    .instruction-box {
-      background: #0a0a0a;
-      border: 1px solid #1a1a1a;
-      border-radius: 8px;
-      padding: 14px 18px;
-      margin: 14px 0;
-      font-family: 'JetBrains Mono', 'Consolas', 'Courier New', monospace;
-      font-size: 13px;
-      color: #1DB954;
-      word-break: break-all;
-      user-select: all;
-    }
-
-    .divider {
-      height: 1px;
-      background: #1a1a1a;
-      margin: 20px 0;
-    }
-
-    /* ── Form ────────────────────────────────────────────────────── */
-    label {
-      display: block;
-      font-size: 12px;
-      color: #555555;
-      font-weight: 500;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-      margin-bottom: 8px;
-    }
-
-    input {
-      width: 100%;
-      padding: 12px 16px;
-      border-radius: 8px;
-      border: 1px solid #2a2a2a;
-      background: #0a0a0a;
-      color: #ffffff;
-      font-size: 14px;
-      font-family: 'JetBrains Mono', 'Consolas', 'Courier New', monospace;
-      outline: none;
-      transition: border-color 0.15s;
-    }
-
-    input:focus {
-      border-color: #1DB954;
-    }
-
-    input::placeholder {
-      color: #333333;
     }
 
     /* ── Buttons ─────────────────────────────────────────────────── */
@@ -291,673 +157,493 @@
       align-items: center;
       justify-content: center;
       gap: 10px;
-      padding: 12px 24px;
-      border: 1px solid #2a2a2a;
-      border-radius: 8px;
-      background: transparent;
-      color: #ffffff;
-      font-size: 14px;
-      font-weight: 500;
+      padding: 14px 28px;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: 600;
       cursor: pointer;
       transition: all 0.15s ease;
       touch-action: manipulation;
       font-family: inherit;
-    }
-
-    .btn:hover {
-      background: #ffffff;
-      color: #0a0a0a;
-      border-color: #ffffff;
+      text-decoration: none;
     }
 
     .btn:active {
       transform: scale(0.97);
     }
 
-    .btn:disabled {
-      opacity: 0.3;
-      cursor: not-allowed;
-      transform: none;
-    }
-
-    .btn:disabled:hover {
-      background: transparent;
-      color: #ffffff;
-      border-color: #2a2a2a;
-    }
-
     .btn-primary {
       background: #ffffff;
       color: #0a0a0a;
-      border-color: #ffffff;
-      font-weight: 600;
+      border: none;
     }
 
     .btn-primary:hover {
       background: #e0e0e0;
-      border-color: #e0e0e0;
-    }
-
-    .btn-primary:disabled:hover {
-      background: #ffffff;
-      border-color: #ffffff;
     }
 
     .btn-secondary {
-      border-color: #2a2a2a;
-      color: #888888;
-      font-size: 13px;
-      padding: 8px 14px;
-      flex-shrink: 0;
+      background: transparent;
+      color: #ffffff;
+      border: 1px solid #2a2a2a;
     }
 
     .btn-secondary:hover {
       border-color: #555555;
-      color: #ffffff;
-      background: transparent;
+      background: #141414;
     }
 
-    .btn-copy {
-      border: none;
+    .btn-group {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    /* ── Features Section ────────────────────────────────────────── */
+    .features {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 60px 40px 80px;
+    }
+
+    .features-title {
+      text-align: center;
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .features-subtitle {
+      text-align: center;
+      font-size: 15px;
+      color: #555555;
+      margin-bottom: 48px;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
+    }
+
+    .feature-card {
+      background: #141414;
+      border: 1px solid #1a1a1a;
+      border-radius: 12px;
+      padding: 28px 24px;
+      transition: border-color 0.15s ease;
+    }
+
+    .feature-card:hover {
+      border-color: #2a2a2a;
+    }
+
+    .feature-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
       background: #1a1a1a;
-      color: #888888;
-      padding: 6px 12px;
-      border-radius: 6px;
-      font-size: 12px;
-      cursor: pointer;
-      transition: all 0.15s;
-      font-family: inherit;
-      flex-shrink: 0;
-    }
-
-    .btn-copy:hover {
-      background: #2a2a2a;
-      color: #ffffff;
-    }
-
-    .btn-copy.copied {
-      background: #1DB95422;
-      color: #1DB954;
-      border: 1px solid #1DB95444;
-    }
-
-    /* ── Token Display ───────────────────────────────────────────── */
-    .token-row {
       display: flex;
       align-items: center;
-      gap: 10px;
-      background: #0a0a0a;
-      border: 1px solid #1a1a1a;
-      border-radius: 8px;
-      padding: 12px 16px;
-      margin-top: 10px;
+      justify-content: center;
+      margin-bottom: 16px;
+      color: #1DB954;
     }
 
-    .token-label {
-      font-size: 12px;
+    .feature-icon svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    .feature-card h3 {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: #ffffff;
+    }
+
+    .feature-card p {
+      font-size: 14px;
+      color: #666666;
+      line-height: 1.6;
+    }
+
+    /* ── How It Works ────────────────────────────────────────────── */
+    .how-it-works {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 0 40px 80px;
+    }
+
+    .how-title {
+      text-align: center;
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .how-subtitle {
+      text-align: center;
+      font-size: 15px;
       color: #555555;
-      font-weight: 500;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
+      margin-bottom: 48px;
+    }
+
+    .steps {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .step {
+      display: flex;
+      align-items: flex-start;
+      gap: 20px;
+      background: #141414;
+      border: 1px solid #1a1a1a;
+      border-radius: 12px;
+      padding: 24px;
+    }
+
+    .step-num {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: #1DB954;
+      color: #0a0a0a;
+      font-size: 16px;
+      font-weight: 700;
       flex-shrink: 0;
-      min-width: 120px;
     }
 
-    .token-value {
-      flex: 1;
-      font-family: 'JetBrains Mono', 'Consolas', 'Courier New', monospace;
-      font-size: 13px;
-      color: #cccccc;
-      word-break: break-all;
-      min-width: 0;
+    .step-content h3 {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 4px;
     }
 
-    /* ── Messages ────────────────────────────────────────────────── */
-    .msg {
-      font-size: 13px;
-      margin-top: 10px;
-      min-height: 20px;
-      line-height: 1.4;
+    .step-content p {
+      font-size: 14px;
+      color: #666666;
+      line-height: 1.6;
     }
 
-    .msg.success { color: #1DB954; }
-    .msg.error { color: #ff4444; }
-    .msg.info { color: #ffaa00; }
+    /* ── CTA Section ─────────────────────────────────────────────── */
+    .cta {
+      text-align: center;
+      padding: 60px 40px 80px;
+      border-top: 1px solid #1a1a1a;
+    }
+
+    .cta h2 {
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+
+    .cta p {
+      font-size: 15px;
+      color: #666666;
+      margin-bottom: 32px;
+    }
 
     /* ── Footer ──────────────────────────────────────────────────── */
     .footer {
       text-align: center;
-      padding: 20px 0 0;
+      padding: 32px 40px;
+      border-top: 1px solid #1a1a1a;
     }
 
     .footer p {
-      font-size: 12px;
+      font-size: 13px;
       color: #333333;
-      line-height: 1.5;
+      line-height: 1.6;
     }
 
     .footer a {
       color: #555555;
       text-decoration: none;
+      transition: color 0.15s;
     }
 
     .footer a:hover {
       color: #888888;
     }
 
-    /* ── Privacy Notice (Fullscreen Overlay) ─────────────────────── */
-    #privacy-overlay {
-      position: fixed;
-      inset: 0;
-      background: #0a0a0a;
-      z-index: 1000;
+    .footer-links {
       display: flex;
-      align-items: center;
       justify-content: center;
-      padding: 40px;
-    }
-
-    #privacy-overlay.hidden {
-      display: none;
-    }
-
-    .privacy-card {
-      max-width: 640px;
-      width: 100%;
-      background: #141414;
-      border: 1px solid #1a1a1a;
-      border-radius: 16px;
-      padding: 48px 40px;
-      text-align: center;
-    }
-
-    .privacy-icon {
-      width: 80px;
-      height: 80px;
-      margin: 0 auto 24px;
-      border-radius: 16px;
-      overflow: hidden;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .privacy-icon img {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-    }
-
-    .privacy-title {
-      font-size: 28px;
-      font-weight: 700;
-      color: #ffffff;
-      margin-bottom: 8px;
-    }
-
-    .privacy-subtitle {
-      font-size: 16px;
-      color: #555555;
-      margin-bottom: 32px;
-    }
-
-    .privacy-body {
-      text-align: left;
-      background: #0a0a0a;
-      border: 1px solid #1a1a1a;
-      border-radius: 12px;
-      padding: 24px 28px;
-      margin-bottom: 32px;
-    }
-
-    .privacy-body p {
-      font-size: 14px;
-      color: #888888;
-      line-height: 1.7;
+      gap: 24px;
       margin-bottom: 12px;
     }
 
-    .privacy-body p:last-child {
-      margin-bottom: 0;
+    .footer-links a {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      color: #555555;
+      text-decoration: none;
     }
 
-    .privacy-body strong {
-      color: #cccccc;
-    }
-
-    .privacy-body .highlight {
-      color: #1DB954;
-    }
-
-    .privacy-body ul {
-      list-style: none;
-      padding: 0;
-      margin: 12px 0;
-    }
-
-    .privacy-body ul li {
-      font-size: 14px;
+    .footer-links a:hover {
       color: #888888;
-      line-height: 1.7;
-      padding: 4px 0 4px 24px;
-      position: relative;
     }
 
-    .privacy-body ul li::before {
-      content: '•';
-      position: absolute;
-      left: 8px;
-      color: #1DB954;
+    .footer-links svg {
+      width: 16px;
+      height: 16px;
     }
-
-    .btn-accept {
-      background: #1DB954;
-      color: #000000;
-      border: none;
-      font-size: 16px;
-      font-weight: 600;
-      padding: 14px 40px;
-      border-radius: 10px;
-      cursor: pointer;
-      transition: all 0.15s ease;
-      font-family: inherit;
-    }
-
-    .btn-accept:hover {
-      background: #1ed760;
-      transform: scale(1.02);
-    }
-
-    .btn-accept:active {
-      transform: scale(0.98);
-    }
-
-    /* ── Hidden ──────────────────────────────────────────────────── */
-    .hidden { display: none !important; }
 
     /* ── Responsive ──────────────────────────────────────────────── */
     @media (max-width: 600px) {
-      body { padding: 70px 20px 20px; }
-      .navbar { padding: 12px 20px; }
-      .container { max-width: 100%; }
-      .card { padding: 20px; }
-      .privacy-card { padding: 32px 24px; }
-      .privacy-title { font-size: 22px; }
-      .header { flex-wrap: wrap; }
-      .header-badge { width: 100%; justify-content: center; }
+      .navbar {
+        padding: 12px 20px;
+      }
+      .hero {
+        padding: 60px 20px 40px;
+      }
+      .hero h1 {
+        font-size: 32px;
+      }
+      .hero p {
+        font-size: 16px;
+      }
+      .features {
+        padding: 40px 20px 60px;
+      }
+      .how-it-works {
+        padding: 0 20px 60px;
+      }
+      .cta {
+        padding: 40px 20px 60px;
+      }
+      .footer {
+        padding: 24px 20px;
+      }
+      .features-grid {
+        grid-template-columns: 1fr;
+      }
+      .btn-group {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .btn {
+        justify-content: center;
+      }
     }
   </style>
 </head>
 <body>
   <!-- Navbar -->
   <nav class="navbar">
-    <a href="landing.html" class="navbar-brand">
+    <a href="index.html" class="navbar-brand">
       <img src="icon.ico" alt="Cxeify" />
       <span>Cxeify</span>
     </a>
     <div class="navbar-links">
-      <a href="landing.html">Home</a>
-      <a href="index.html" class="active">Setup</a>
+      <a href="index.html" class="active">Home</a>
+      <a href="setup.html">Setup</a>
     </div>
   </nav>
 
-  <!-- Privacy Notice Overlay -->
-  <div id="privacy-overlay">
-    <div class="privacy-card">
-      <div class="privacy-icon">
-        <img src="icon.ico" alt="Cxeify" />
-      </div>
-      <h1 class="privacy-title">Cxeify</h1>
-      <p class="privacy-subtitle">Spotify Widget for Corsair Xeneon Edge</p>
-
-      <div class="privacy-body">
-        <p><strong>About Privacy & Security</strong></p>
-        <p>
-          To control Spotify from your Xeneon Edge, the widget needs permission to read your playback status and control playback (play, pause, skip, volume). This is done through Spotify's official OAuth authorization process.
-        </p>
-        <p>
-          <strong>We never see or store your data.</strong> The authorization happens entirely in your browser between you and Spotify. The generated Client ID and Refresh Token are only stored locally in your browser during setup and in your iCUE widget settings afterward. Neither this page nor the widget sends data anywhere except to Spotify's official API.
-        </p>
-        <p>
-          <strong>Keep your Client ID and Refresh Token private.</strong> While a Refresh Token is less sensitive than a Client Secret, it should still be treated like a password. Anyone with both values could control your Spotify playback.
-        </p>
-        <ul>
-          <li>Authorization happens <strong>entirely in your browser</strong></li>
-          <li>No data is sent to any server except <span class="highlight">Spotify's official API</span></li>
-          <li>Tokens are stored <strong>locally</strong> in your browser and iCUE settings</li>
-          <li>No companion server or cloud service required</li>
-        </ul>
-      </div>
-
-      <button class="btn-accept" onclick="acceptPrivacy()">I Understand</button>
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-icon">
+      <img src="icon.ico" alt="Cxeify" />
     </div>
-  </div>
-
-  <!-- Main Setup Content -->
-  <div class="container" id="setup-content" style="display:none;">
-    <!-- Header -->
-    <div class="header">
-      <div class="header-icon">
-        <img src="icon.ico" alt="Cxeify" />
+    <h1>Control Spotify from your Xeneon Edge</h1>
+    <p>
+      Cxeify turns your Corsair Xeneon Edge display into a fully functional Spotify remote control.
+      Play, pause, skip tracks, and control volume — all from your iCUE dashboard.
+    </p>
+    <div class="hero-badges">
+      <div class="hero-badge">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+        </svg>
+        No companion server
       </div>
-      <div class="header-info">
-        <div class="header-title">Cxeify Setup</div>
-        <div class="header-subtitle">Spotify Widget for Corsair Xeneon Edge</div>
-      </div>
-      <div class="header-badge" id="badge">
-        <span class="badge-dot no" id="badgeDot"></span>
-        <span id="badgeText">Not started</span>
-      </div>
-    </div>
-
-    <!-- Step 1: Create Spotify App -->
-    <div class="card">
-      <div class="card-title">
-        <span class="step-num" id="step1Num">1</span>
-        Create a Spotify App
-      </div>
-
-      <p class="instruction">
-        1. Go to <a href="https://developer.spotify.com/dashboard" target="_blank" style="color:#1DB954;">developer.spotify.com/dashboard</a> and log in with your Spotify account.
-      </p>
-      <p class="instruction">
-        2. Click <strong>"Create App"</strong>.
-      </p>
-      <p class="instruction">
-        3. Fill in the form:
-      </p>
-      <p class="instruction" style="padding-left:36px;">
-        • <strong>App name:</strong> <code>Cxeify</code>
-      </p>
-      <p class="instruction" style="padding-left:36px;">
-        • <strong>App description:</strong> <code>iCUE Widget for Xeneon Edge</code>
-      </p>
-      <p class="instruction" style="padding-left:36px;">
-        • <strong>APIs used:</strong> ✅ <span class="highlight">Web API</span>
-      </p>
-      <p class="instruction">
-        4. Click <strong>"Save"</strong>.
-      </p>
-      <p class="instruction">
-        5. In your app's dashboard, click <strong>"Settings"</strong>.
-      </p>
-      <p class="instruction">
-        6. Under <strong>"Redirect URIs"</strong>, add this exact URL:
-      </p>
-      <div class="token-row" style="margin-top:4px;margin-bottom:14px;">
-        <span class="token-label">Redirect URI</span>
-        <span class="token-value" id="redirectUri">loading...</span>
-        <button class="btn-copy" id="copyRedirectUri" onclick="copyToClipboard('redirectUri', this)">Copy</button>
-      </div>
-      <p class="instruction">
-        7. Click <strong>"Add"</strong>, then scroll down and click <strong>"Save"</strong>.
-      </p>
-      <p class="instruction">
-        8. Copy your <strong>Client ID</strong> from the app dashboard (you'll need it below).
-      </p>
-    </div>
-
-    <!-- Step 2: Enter Client ID -->
-    <div class="card">
-      <div class="card-title">
-        <span class="step-num" id="step2Num">2</span>
-        Enter Client ID
-      </div>
-
-      <label for="clientId">Spotify Client ID</label>
-      <input type="text" id="clientId" placeholder="Paste your Client ID here..." />
-      <div id="configMsg" class="msg"></div>
-    </div>
-
-    <!-- Step 3: Authorize -->
-    <div class="card" id="step3Card">
-      <div class="card-title">
-        <span class="step-num" id="step3Num">3</span>
-        Authorize with Spotify
-      </div>
-
-      <p class="instruction" style="padding-left:0;margin-bottom:14px;">
-        Grant Cxeify permission to control your Spotify playback.
-      </p>
-
-      <button class="btn btn-primary" id="authBtn" onclick="authorizeSpotify()" disabled style="width:100%;">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <div class="hero-badge">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
           <polyline points="22 4 12 14.01 9 11.01"/>
         </svg>
-        Authorize with Spotify
-      </button>
-      <div id="authMsg" class="msg"></div>
-    </div>
-
-    <!-- Step 4: Copy to Widget -->
-    <div class="card" id="step4Card" style="display:none;">
-      <div class="card-title">
-        <span class="step-num done">✓</span>
-        Setup Complete
+        <span class="highlight">Spotify Premium</span> required
       </div>
-
-      <p class="instruction" style="padding-left:0;margin-bottom:14px;color:#cccccc;">
-        Copy these values into your iCUE widget settings:
-      </p>
-
-      <div class="token-row">
-        <span class="token-label">Client ID</span>
-        <span class="token-value" id="resultClientId">-</span>
-        <button class="btn-copy" id="copyClientId" onclick="copyToClipboard('resultClientId', this)">Copy</button>
+      <div class="hero-badge">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+          <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+        </svg>
+        Data stays local
       </div>
+    </div>
+    <div class="btn-group">
+      <a href="setup.html" class="btn btn-primary">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+          <polyline points="22 4 12 14.01 9 11.01"/>
+        </svg>
+        Get Started — Setup Guide
+      </a>
+      <a href="https://github.com/AlexSch95/cxeify-widget/releases/download/v2.0.0-beta/cxeify-v2.0.0-beta.rar" class="btn btn-secondary">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+          <polyline points="7 10 12 15 17 10"/>
+          <line x1="12" y1="15" x2="12" y2="3"/>
+        </svg>
+        Download Widget
+      </a>
+    </div>
+  </section>
 
-      <div class="token-row" style="margin-top:10px;">
-        <span class="token-label">Refresh Token</span>
-        <span class="token-value" id="resultRefreshToken">-</span>
-        <button class="btn-copy" id="copyRefreshToken" onclick="copyToClipboard('resultRefreshToken', this)">Copy</button>
+  <!-- Features -->
+  <section class="features">
+    <h2 class="features-title">What you can do</h2>
+    <p class="features-subtitle">Everything you need to control your music from your display</p>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="5 3 19 12 5 21 5 3"/>
+          </svg>
+        </div>
+        <h3>Playback Controls</h3>
+        <p>Play, pause, skip to the next or previous track directly from your Xeneon Edge display.</p>
       </div>
-
-      <div class="divider"></div>
-
-      <p class="instruction" style="padding-left:0;color:#555555;font-size:13px;">
-        1. Open <strong>iCUE</strong> → your <strong>Xeneon Edge</strong> device
-      </p>
-      <p class="instruction" style="padding-left:0;color:#555555;font-size:13px;">
-        2. Select the <strong>Cxeify</strong> widget
-      </p>
-      <p class="instruction" style="padding-left:0;color:#555555;font-size:13px;">
-        3. Click <strong>Widget Settings</strong> (gear icon)
-      </p>
-      <p class="instruction" style="padding-left:0;color:#555555;font-size:13px;">
-        4. Paste <strong>Client ID</strong> and <strong>Refresh Token</strong> into the fields
-      </p>
-      <p class="instruction" style="padding-left:0;color:#555555;font-size:13px;">
-        5. The widget will connect automatically
-      </p>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+            <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/>
+          </svg>
+        </div>
+        <h3>Volume Control</h3>
+        <p>Adjust the volume with an interactive slider. Mute and unmute with a single tap.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="17 1 21 5 17 9"/>
+            <path d="M3 11V9a4 4 0 0 1 4-4h14"/>
+            <polyline points="7 23 3 19 7 15"/>
+            <path d="M21 13v2a4 4 0 0 1-4 4H3"/>
+          </svg>
+        </div>
+        <h3>Shuffle & Repeat</h3>
+        <p>Toggle shuffle and repeat modes to control how your music plays.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/>
+            <polyline points="12 6 12 12 16 14"/>
+          </svg>
+        </div>
+        <h3>Real-Time Updates</h3>
+        <p>See the currently playing track, artist, and progress bar — updated in real time.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+            <circle cx="8.5" cy="8.5" r="1.5"/>
+            <polyline points="21 15 16 10 5 21"/>
+          </svg>
+        </div>
+        <h3>Album Art Display</h3>
+        <p>The current album cover is shown as a blurred, customizable backdrop behind the controls.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="3"/>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+          </svg>
+        </div>
+        <h3>Fully Customizable</h3>
+        <p>Change colors, transparency, and update interval to match your setup perfectly.</p>
+      </div>
     </div>
+  </section>
 
-    <!-- Footer -->
-    <div class="footer">
-      <p>
-        This page runs entirely in your browser. No data is sent to any server except Spotify's official API.
-      </p>
+  <!-- How It Works -->
+  <section class="how-it-works">
+    <h2 class="how-title">How it works</h2>
+    <p class="how-subtitle">No companion server required — just iCUE and your browser</p>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <h3>OAuth Setup</h3>
+          <p>Open the setup page in your browser, create a Spotify app, and authorize Cxeify to control your playback. The entire process takes about 2 minutes.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <h3>Install the Widget</h3>
+          <p>Copy the Cxeify folder to your iCUE widgets directory and select it on your Xeneon Edge device in iCUE.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <h3>Enter Credentials</h3>
+          <p>Paste your Spotify Client ID and Refresh Token into the widget settings. The widget connects automatically — no further configuration needed.</p>
+        </div>
+      </div>
     </div>
-  </div>
+  </section>
 
-  <script>
-    // ── Privacy Notice ────────────────────────────────────────────
-    function acceptPrivacy() {
-      document.getElementById('privacy-overlay').classList.add('hidden');
-      document.getElementById('setup-content').style.display = 'block';
-    }
+  <!-- CTA -->
+  <section class="cta">
+    <h2>Ready to get started?</h2>
+    <p>Follow the setup guide to connect Cxeify to your Spotify account in minutes.</p>
+    <div class="btn-group">
+      <a href="setup.html" class="btn btn-primary">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+          <polyline points="22 4 12 14.01 9 11.01"/>
+        </svg>
+        Open Setup Guide
+      </a>
+      <a href="https://github.com/AlexSch95/cxeify-widget/releases/download/v2.0.0-beta/cxeify-v2.0.0-beta.rar" class="btn btn-secondary">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+          <polyline points="7 10 12 15 17 10"/>
+          <line x1="12" y1="15" x2="12" y2="3"/>
+        </svg>
+        Download Widget
+      </a>
+    </div>
+  </section>
 
-    // Auto-accept privacy if returning from OAuth callback
-    const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.has('clientId') || urlParams.has('error')) {
-      acceptPrivacy();
-    }
-
-    // ── Determine callback URL ────────────────────────────────────
-    const callbackUrl = window.location.href.replace(/\/[^/]*$/, '/callback.html');
-    document.getElementById('redirectUri').textContent = callbackUrl;
-
-    // ── PKCE Helpers ──────────────────────────────────────────────
-    function generateCodeVerifier() {
-      const array = new Uint8Array(32);
-      crypto.getRandomValues(array);
-      return btoa(String.fromCharCode(...array))
-        .replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
-    }
-
-    async function generateCodeChallenge(verifier) {
-      const encoder = new TextEncoder();
-      const data = encoder.encode(verifier);
-      const hash = await crypto.subtle.digest('SHA-256', data);
-      return btoa(String.fromCharCode(...new Uint8Array(hash)))
-        .replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
-    }
-
-    // ── Copy to Clipboard ─────────────────────────────────────────
-    async function copyToClipboard(elementId, btn) {
-      const text = document.getElementById(elementId).textContent;
-      if (!text || text === '-') return;
-      
-      try {
-        await navigator.clipboard.writeText(text);
-        btn.textContent = 'Copied!';
-        btn.classList.add('copied');
-        setTimeout(() => {
-          btn.textContent = 'Copy';
-          btn.classList.remove('copied');
-        }, 2000);
-      } catch (e) {
-        const textarea = document.createElement('textarea');
-        textarea.value = text;
-        document.body.appendChild(textarea);
-        textarea.select();
-        document.execCommand('copy');
-        document.body.removeChild(textarea);
-        btn.textContent = 'Copied!';
-        btn.classList.add('copied');
-        setTimeout(() => {
-          btn.textContent = 'Copy';
-          btn.classList.remove('copied');
-        }, 2000);
-      }
-    }
-
-    // ── Badge Update ──────────────────────────────────────────────
-    function setBadge(state, text) {
-      const dot = document.getElementById('badgeDot');
-      const label = document.getElementById('badgeText');
-      dot.className = 'badge-dot ' + state;
-      label.textContent = text;
-    }
-
-    // ── Step Number Update ────────────────────────────────────────
-    function setStepDone(num) {
-      const el = document.getElementById('step' + num + 'Num');
-      if (el) {
-        el.textContent = '✓';
-        el.className = 'step-num done';
-      }
-    }
-
-    // ── Check saved Client ID ─────────────────────────────────────
-    const savedClientId = localStorage.getItem('cxeify_client_id');
-    if (savedClientId) {
-      document.getElementById('clientId').value = savedClientId;
-      document.getElementById('authBtn').disabled = false;
-      setBadge('warn', 'Ready to authorize');
-      setStepDone(2);
-    } else {
-      setBadge('no', 'Step 1: Create App');
-    }
-
-    // ── Client ID Input ───────────────────────────────────────────
-    document.getElementById('clientId').addEventListener('input', function() {
-      const val = this.value.trim();
-      if (val.length > 10) {
-        localStorage.setItem('cxeify_client_id', val);
-        document.getElementById('authBtn').disabled = false;
-        setBadge('warn', 'Ready to authorize');
-        setStepDone(2);
-        document.getElementById('configMsg').className = 'msg success';
-        document.getElementById('configMsg').textContent = '✅ Client ID saved. Proceed to Step 3.';
-      } else {
-        document.getElementById('authBtn').disabled = true;
-        setBadge('no', 'Enter Client ID');
-        document.getElementById('configMsg').className = '';
-        document.getElementById('configMsg').textContent = '';
-      }
-    });
-
-    // ── Check for callback result ─────────────────────────────────
-    function checkForResult() {
-      const params = new URLSearchParams(window.location.search);
-      const clientId = params.get('clientId');
-      const refreshToken = params.get('refreshToken');
-      const error = params.get('error');
-      
-      if (error) {
-        document.getElementById('authMsg').className = 'msg error';
-        document.getElementById('authMsg').textContent = '❌ ' + decodeURIComponent(error);
-        setBadge('no', 'Authorization failed');
-        return;
-      }
-      
-      if (clientId && refreshToken) {
-        document.getElementById('resultClientId').textContent = clientId;
-        document.getElementById('resultRefreshToken').textContent = refreshToken;
-        document.getElementById('step4Card').style.display = 'block';
-        document.getElementById('step3Card').style.display = 'none';
-        setBadge('ok', 'Setup complete!');
-        setStepDone(3);
-        
-        // Clean URL
-        window.history.replaceState({}, document.title, window.location.pathname);
-      }
-    }
-
-    // ── Authorize ─────────────────────────────────────────────────
-    async function authorizeSpotify() {
-      const clientId = document.getElementById('clientId').value.trim();
-      if (!clientId) {
-        document.getElementById('authMsg').className = 'msg error';
-        document.getElementById('authMsg').textContent = '❌ Please enter your Client ID first.';
-        return;
-      }
-
-      const authMsg = document.getElementById('authMsg');
-      authMsg.className = 'msg info';
-      authMsg.textContent = '⏳ Redirecting to Spotify...';
-
-      try {
-        const verifier = generateCodeVerifier();
-        const challenge = await generateCodeChallenge(verifier);
-        
-        localStorage.setItem('cxeify_code_verifier', verifier);
-        localStorage.setItem('cxeify_client_id', clientId);
-
-        const params = new URLSearchParams({
-          response_type: 'code',
-          client_id: clientId,
-          scope: [
-            'user-read-playback-state',
-            'user-modify-playback-state',
-            'user-read-currently-playing',
-            'playlist-read-private',
-            'playlist-read-collaborative',
-          ].join(' '),
-          redirect_uri: callbackUrl,
-          code_challenge_method: 'S256',
-          code_challenge: challenge,
-        });
-
-        window.location.href = `https://accounts.spotify.com/authorize?${params.toString()}`;
-      } catch (e) {
-        authMsg.className = 'msg error';
-        authMsg.textContent = '❌ Error: ' + e.message;
-      }
-    }
-
-    // ── Init ──────────────────────────────────────────────────────
-    checkForResult();
-  </script>
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-links">
+      <a href="https://github.com/AlexSch95" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+        </svg>
+        GitHub Profile
+      </a>
+      <a href="https://github.com/AlexSch95/cxeify-widget" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+        </svg>
+        Repository
+      </a>
+    </div>
+    <p>
+      Made by <a href="https://github.com/AlexSch95" target="_blank" rel="noopener">AlexSch95</a> &middot;
+      Open source on <a href="https://github.com/AlexSch95/cxeify-widget" target="_blank" rel="noopener">GitHub</a>
+    </p>
+  </footer>
 </body>
 </html>

@@ -21,7 +21,7 @@
       if (error) {
         document.getElementById('status').textContent = '❌ Authorization failed: ' + error;
         // Redirect back to setup page with error
-        const setupUrl = window.location.href.replace(/\/callback\.html.*$/, '/index.html');
+        const setupUrl = window.location.href.replace(/\/callback\.html.*$/, '/setup.html');
         window.location.href = setupUrl + '?error=' + encodeURIComponent(error);
         return;
       }
@@ -71,12 +71,12 @@
         localStorage.removeItem('cxeify_code_verifier');
         
         // Redirect back to setup page with results
-        const setupUrl = window.location.href.replace(/\/callback\.html.*$/, '/index.html');
+        const setupUrl = window.location.href.replace(/\/callback\.html.*$/, '/setup.html');
         window.location.href = setupUrl + '?clientId=' + encodeURIComponent(clientId) + '&refreshToken=' + encodeURIComponent(refreshToken);
       } catch (e) {
         document.getElementById('status').textContent = '❌ Error: ' + e.message;
         // Redirect back to setup page with error
-        const setupUrl = window.location.href.replace(/\/callback\.html.*$/, '/index.html');
+        const setupUrl = window.location.href.replace(/\/callback\.html.*$/, '/setup.html');
         setTimeout(() => {
           window.location.href = setupUrl + '?error=' + encodeURIComponent(e.message);
         }, 2000);
