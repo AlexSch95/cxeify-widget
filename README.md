@@ -33,46 +33,26 @@ No companion server or desktop app is required. The widget communicates directly
 
 ### Step 1: OAuth Setup
 
-1. Open **`docs/index.html`** in your browser (double-click the file)
+1. Visit the [Setup Page](https://alexsch95.github.io/cxeify-widget/)
 2. Read the privacy notice and click **"I Understand"**
 3. Go to the [Spotify Developer Dashboard](https://developer.spotify.com/dashboard) and log in
 4. Click **"Create App"**:
    - App name: `Cxeify`
    - App description: `iCUE Widget for Xeneon Edge`
+   - Add the Redirect URI from the Setup Page
    - APIs used: ✅ **Web API**
-5. Click **"Save"**, then click **"Settings"** in your app's dashboard
-6. Under **"Redirect URIs"**, add the URL shown on the setup page (use the **Copy** button) and click **"Add"**, then **"Save"**
+5. Click **"Save"**
 7. Copy your **Client ID** from the app dashboard and paste it into the setup page
 8. Click **"Authorize with Spotify"** and log in – you will be redirected back with your credentials
 9. Copy the generated **Client ID** and **Refresh Token**
 
 ### Step 2: Install the Widget
 
-1. Copy the entire `Cxeify/` folder to your iCUE widgets directory:
-   - `%APPDATA%/Corsair/CUE5/widgets/widgets/` (Windows)
-2. Open iCUE and navigate to your Xeneon Edge settings
-3. Select the **Cxeify** widget from the widget picker
-
-### Step 3: Configure in iCUE
-
-Open the widget settings (gear icon) and enter the credentials from Step 1:
-
-| Setting | Description |
-|---------|-------------|
-| Spotify Client ID | Your Spotify app's Client ID |
-| Spotify Refresh Token | The token generated during setup |
-| Update Interval | How often to refresh playback status (default: 2000ms) |
-
-Under **Widget Personalization** you can adjust colors and transparency:
-
-| Setting | Default | Description |
-|---------|---------|-------------|
-| Text Color | `#ffffff` | Color of text |
-| Accent Color | `#1DB954` | Spotify green accent |
-| Background Color | `#121212` | Background color |
-| Albumcover Backdrop Transparency | 0% | Transparency of the blurred album art backdrop |
-
-The widget will connect automatically once configured.
+1. Open iCUE and navigate to your Xeneon Edge settings
+2. Select the **Cxeify** widget from the widget picker
+3. Paste Client ID and Refresh Token
+4. Make sure Spotify is running on any Device and Music is playing
+5. The Widget should now display your Spotify Controller
 
 ## Project Structure
 
@@ -104,9 +84,11 @@ The widget will connect automatically once configured.
 
 ## Supported Devices
 
-- Corsair Xeneon Edge (Medium and Large sizes)
+- Corsair Xeneon Edge (Medium Widget Size)
 - Other iCUE dashboard LCDs may work but are not officially tested
 
 ## License
 
 MIT
+
+Made by Machinezr
