@@ -4,6 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Cxeify - Spotify Setup</title>
+  <link rel="icon" href="../desktop/build/icon.ico" type="image/x-icon" />
   <style>
     * { box-sizing: border-box; margin: 0; }
     body {
@@ -12,14 +13,14 @@
       color: #ffffff;
       display: flex;
       justify-content: center;
-      align-items: flex-start;
+      align-items: center;
       min-height: 100vh;
       margin: 0;
-      padding: 40px 20px;
+      padding: 40px;
     }
 
     .container {
-      max-width: 560px;
+      max-width: 720px;
       width: 100%;
     }
 
@@ -27,20 +28,25 @@
     .header {
       display: flex;
       align-items: center;
-      gap: 12px;
-      margin-bottom: 24px;
+      gap: 16px;
+      margin-bottom: 32px;
     }
 
     .header-icon {
-      width: 36px;
-      height: 36px;
-      background: #1DB954;
-      border-radius: 8px;
+      width: 48px;
+      height: 48px;
+      border-radius: 10px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 20px;
       flex-shrink: 0;
+      overflow: hidden;
+    }
+
+    .header-icon img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
     }
 
     .header-info {
@@ -49,7 +55,7 @@
     }
 
     .header-title {
-      font-size: 16px;
+      font-size: 22px;
       font-weight: 600;
       letter-spacing: -0.01em;
       color: #ffffff;
@@ -57,7 +63,7 @@
     }
 
     .header-subtitle {
-      font-size: 12px;
+      font-size: 14px;
       color: #555555;
       font-weight: 400;
       line-height: 1.3;
@@ -66,55 +72,55 @@
     .header-badge {
       display: flex;
       align-items: center;
-      gap: 6px;
-      font-size: 11px;
+      gap: 8px;
+      font-size: 12px;
       color: #666666;
-      padding: 4px 10px;
+      padding: 6px 14px;
       border: 1px solid #1a1a1a;
-      border-radius: 6px;
+      border-radius: 8px;
       white-space: nowrap;
     }
 
     .badge-dot {
-      width: 6px;
-      height: 6px;
+      width: 8px;
+      height: 8px;
       border-radius: 50%;
       background: #333333;
     }
 
-    .badge-dot.ok { background: #1DB954; box-shadow: 0 0 4px rgba(29,185,84,0.4); }
-    .badge-dot.warn { background: #ffaa00; box-shadow: 0 0 4px rgba(255,170,0,0.3); }
-    .badge-dot.no { background: #ff4444; box-shadow: 0 0 4px rgba(255,68,68,0.3); }
+    .badge-dot.ok { background: #1DB954; box-shadow: 0 0 6px rgba(29,185,84,0.4); }
+    .badge-dot.warn { background: #ffaa00; box-shadow: 0 0 6px rgba(255,170,0,0.3); }
+    .badge-dot.no { background: #ff4444; box-shadow: 0 0 6px rgba(255,68,68,0.3); }
 
     /* ── Card ────────────────────────────────────────────────────── */
     .card {
       background: #141414;
       border: 1px solid #1a1a1a;
       border-radius: 12px;
-      padding: 24px 28px;
-      margin-bottom: 12px;
+      padding: 28px 32px;
+      margin-bottom: 16px;
     }
 
     .card-title {
-      font-size: 13px;
+      font-size: 15px;
       font-weight: 600;
       color: #ffffff;
-      margin-bottom: 16px;
+      margin-bottom: 20px;
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 10px;
     }
 
     .card-title .step-num {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      width: 20px;
-      height: 20px;
+      width: 24px;
+      height: 24px;
       border-radius: 50%;
       background: #1DB954;
       color: #0a0a0a;
-      font-size: 11px;
+      font-size: 12px;
       font-weight: 700;
       flex-shrink: 0;
     }
@@ -130,11 +136,11 @@
 
     /* ── Instructions ────────────────────────────────────────────── */
     .instruction {
-      font-size: 13px;
+      font-size: 14px;
       color: #888888;
-      line-height: 1.6;
-      margin-bottom: 6px;
-      padding-left: 16px;
+      line-height: 1.7;
+      margin-bottom: 8px;
+      padding-left: 20px;
       position: relative;
     }
 
@@ -142,9 +148,9 @@
       content: '';
       position: absolute;
       left: 0;
-      top: 8px;
-      width: 4px;
-      height: 4px;
+      top: 10px;
+      width: 5px;
+      height: 5px;
       border-radius: 50%;
       background: #333333;
     }
@@ -155,9 +161,9 @@
 
     .instruction code {
       background: #0a0a0a;
-      padding: 1px 6px;
+      padding: 2px 8px;
       border-radius: 4px;
-      font-size: 12px;
+      font-size: 13px;
       color: #1DB954;
       font-family: 'JetBrains Mono', 'Consolas', 'Courier New', monospace;
     }
@@ -171,10 +177,10 @@
       background: #0a0a0a;
       border: 1px solid #1a1a1a;
       border-radius: 8px;
-      padding: 12px 16px;
-      margin: 12px 0;
+      padding: 14px 18px;
+      margin: 14px 0;
       font-family: 'JetBrains Mono', 'Consolas', 'Courier New', monospace;
-      font-size: 12px;
+      font-size: 13px;
       color: #1DB954;
       word-break: break-all;
       user-select: all;
@@ -183,28 +189,28 @@
     .divider {
       height: 1px;
       background: #1a1a1a;
-      margin: 16px 0;
+      margin: 20px 0;
     }
 
     /* ── Form ────────────────────────────────────────────────────── */
     label {
       display: block;
-      font-size: 11px;
+      font-size: 12px;
       color: #555555;
       font-weight: 500;
       text-transform: uppercase;
       letter-spacing: 0.04em;
-      margin-bottom: 6px;
+      margin-bottom: 8px;
     }
 
     input {
       width: 100%;
-      padding: 10px 14px;
+      padding: 12px 16px;
       border-radius: 8px;
       border: 1px solid #2a2a2a;
       background: #0a0a0a;
       color: #ffffff;
-      font-size: 13px;
+      font-size: 14px;
       font-family: 'JetBrains Mono', 'Consolas', 'Courier New', monospace;
       outline: none;
       transition: border-color 0.15s;
@@ -223,13 +229,13 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
-      padding: 10px 20px;
+      gap: 10px;
+      padding: 12px 24px;
       border: 1px solid #2a2a2a;
       border-radius: 8px;
       background: transparent;
       color: #ffffff;
-      font-size: 13px;
+      font-size: 14px;
       font-weight: 500;
       cursor: pointer;
       transition: all 0.15s ease;
@@ -279,8 +285,8 @@
     .btn-secondary {
       border-color: #2a2a2a;
       color: #888888;
-      font-size: 12px;
-      padding: 6px 12px;
+      font-size: 13px;
+      padding: 8px 14px;
       flex-shrink: 0;
     }
 
@@ -294,9 +300,9 @@
       border: none;
       background: #1a1a1a;
       color: #888888;
-      padding: 4px 10px;
+      padding: 6px 12px;
       border-radius: 6px;
-      font-size: 11px;
+      font-size: 12px;
       cursor: pointer;
       transition: all 0.15s;
       font-family: inherit;
@@ -318,28 +324,28 @@
     .token-row {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 10px;
       background: #0a0a0a;
       border: 1px solid #1a1a1a;
       border-radius: 8px;
-      padding: 10px 14px;
-      margin-top: 8px;
+      padding: 12px 16px;
+      margin-top: 10px;
     }
 
     .token-label {
-      font-size: 11px;
+      font-size: 12px;
       color: #555555;
       font-weight: 500;
       text-transform: uppercase;
       letter-spacing: 0.04em;
       flex-shrink: 0;
-      min-width: 105px;
+      min-width: 120px;
     }
 
     .token-value {
       flex: 1;
       font-family: 'JetBrains Mono', 'Consolas', 'Courier New', monospace;
-      font-size: 12px;
+      font-size: 13px;
       color: #cccccc;
       word-break: break-all;
       min-width: 0;
@@ -347,9 +353,9 @@
 
     /* ── Messages ────────────────────────────────────────────────── */
     .msg {
-      font-size: 12px;
-      margin-top: 8px;
-      min-height: 18px;
+      font-size: 13px;
+      margin-top: 10px;
+      min-height: 20px;
       line-height: 1.4;
     }
 
@@ -360,11 +366,11 @@
     /* ── Footer ──────────────────────────────────────────────────── */
     .footer {
       text-align: center;
-      padding: 16px 0 0;
+      padding: 20px 0 0;
     }
 
     .footer p {
-      font-size: 11px;
+      font-size: 12px;
       color: #333333;
       line-height: 1.5;
     }
@@ -378,49 +384,187 @@
       color: #888888;
     }
 
-    /* ── Disclaimer ─────────────────────────────────────────────── */
-    .disclaimer {
-      background: #1a1a1a;
-      border: 1px solid #2a2a2a;
-      border-radius: 10px;
-      padding: 16px 20px;
-      margin-bottom: 16px;
-    }
-
-    .disclaimer-title {
-      font-size: 12px;
-      font-weight: 600;
-      color: #ffaa00;
-      margin-bottom: 8px;
+    /* ── Privacy Notice (Fullscreen Overlay) ─────────────────────── */
+    #privacy-overlay {
+      position: fixed;
+      inset: 0;
+      background: #0a0a0a;
+      z-index: 1000;
       display: flex;
       align-items: center;
-      gap: 6px;
+      justify-content: center;
+      padding: 40px;
     }
 
-    .disclaimer p {
-      font-size: 12px;
-      color: #777777;
-      line-height: 1.6;
-      margin-bottom: 6px;
+    #privacy-overlay.hidden {
+      display: none;
     }
 
-    .disclaimer p:last-child {
+    .privacy-card {
+      max-width: 640px;
+      width: 100%;
+      background: #141414;
+      border: 1px solid #1a1a1a;
+      border-radius: 16px;
+      padding: 48px 40px;
+      text-align: center;
+    }
+
+    .privacy-icon {
+      width: 80px;
+      height: 80px;
+      margin: 0 auto 24px;
+      border-radius: 16px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .privacy-icon img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .privacy-title {
+      font-size: 28px;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 8px;
+    }
+
+    .privacy-subtitle {
+      font-size: 16px;
+      color: #555555;
+      margin-bottom: 32px;
+    }
+
+    .privacy-body {
+      text-align: left;
+      background: #0a0a0a;
+      border: 1px solid #1a1a1a;
+      border-radius: 12px;
+      padding: 24px 28px;
+      margin-bottom: 32px;
+    }
+
+    .privacy-body p {
+      font-size: 14px;
+      color: #888888;
+      line-height: 1.7;
+      margin-bottom: 12px;
+    }
+
+    .privacy-body p:last-child {
       margin-bottom: 0;
     }
 
-    .disclaimer strong {
-      color: #999999;
+    .privacy-body strong {
+      color: #cccccc;
+    }
+
+    .privacy-body .highlight {
+      color: #1DB954;
+    }
+
+    .privacy-body ul {
+      list-style: none;
+      padding: 0;
+      margin: 12px 0;
+    }
+
+    .privacy-body ul li {
+      font-size: 14px;
+      color: #888888;
+      line-height: 1.7;
+      padding: 4px 0 4px 24px;
+      position: relative;
+    }
+
+    .privacy-body ul li::before {
+      content: '•';
+      position: absolute;
+      left: 8px;
+      color: #1DB954;
+    }
+
+    .btn-accept {
+      background: #1DB954;
+      color: #000000;
+      border: none;
+      font-size: 16px;
+      font-weight: 600;
+      padding: 14px 40px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      font-family: inherit;
+    }
+
+    .btn-accept:hover {
+      background: #1ed760;
+      transform: scale(1.02);
+    }
+
+    .btn-accept:active {
+      transform: scale(0.98);
     }
 
     /* ── Hidden ──────────────────────────────────────────────────── */
-    .hidden { display: none; }
+    .hidden { display: none !important; }
+
+    /* ── Responsive ──────────────────────────────────────────────── */
+    @media (max-width: 600px) {
+      body { padding: 20px; }
+      .container { max-width: 100%; }
+      .card { padding: 20px; }
+      .privacy-card { padding: 32px 24px; }
+      .privacy-title { font-size: 22px; }
+      .header { flex-wrap: wrap; }
+      .header-badge { width: 100%; justify-content: center; }
+    }
   </style>
 </head>
 <body>
-  <div class="container">
+  <!-- Privacy Notice Overlay -->
+  <div id="privacy-overlay">
+    <div class="privacy-card">
+      <div class="privacy-icon">
+        <img src="../desktop/build/icon.ico" alt="Cxeify" />
+      </div>
+      <h1 class="privacy-title">Cxeify</h1>
+      <p class="privacy-subtitle">Spotify Widget for Corsair Xeneon Edge</p>
+
+      <div class="privacy-body">
+        <p><strong>About Privacy & Security</strong></p>
+        <p>
+          To control Spotify from your Xeneon Edge, the widget needs permission to read your playback status and control playback (play, pause, skip, volume). This is done through Spotify's official OAuth authorization process.
+        </p>
+        <p>
+          <strong>We never see or store your data.</strong> The authorization happens entirely in your browser between you and Spotify. The generated Client ID and Refresh Token are only stored locally in your browser during setup and in your iCUE widget settings afterward. Neither this page nor the widget sends data anywhere except to Spotify's official API.
+        </p>
+        <p>
+          <strong>Keep your Client ID and Refresh Token private.</strong> While a Refresh Token is less sensitive than a Client Secret, it should still be treated like a password. Anyone with both values could control your Spotify playback.
+        </p>
+        <ul>
+          <li>Authorization happens <strong>entirely in your browser</strong></li>
+          <li>No data is sent to any server except <span class="highlight">Spotify's official API</span></li>
+          <li>Tokens are stored <strong>locally</strong> in your browser and iCUE settings</li>
+          <li>No companion server or cloud service required</li>
+        </ul>
+      </div>
+
+      <button class="btn-accept" onclick="acceptPrivacy()">I Understand</button>
+    </div>
+  </div>
+
+  <!-- Main Setup Content -->
+  <div class="container" id="setup-content" style="display:none;">
     <!-- Header -->
     <div class="header">
-      <div class="header-icon">🎵</div>
+      <div class="header-icon">
+        <img src="../desktop/build/icon.ico" alt="Cxeify" />
+      </div>
       <div class="header-info">
         <div class="header-title">Cxeify Setup</div>
         <div class="header-subtitle">Spotify Widget for Corsair Xeneon Edge</div>
@@ -429,27 +573,6 @@
         <span class="badge-dot no" id="badgeDot"></span>
         <span id="badgeText">Not started</span>
       </div>
-    </div>
-
-    <!-- Disclaimer -->
-    <div class="disclaimer">
-      <div class="disclaimer-title">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="12" cy="12" r="10"/>
-          <line x1="12" y1="12" x2="12" y2="16"/>
-          <line x1="12" y1="8" x2="12.01" y2="8"/>
-        </svg>
-        About Privacy & Security
-      </div>
-      <p>
-        To control Spotify from your Xeneon Edge, the widget needs permission to read your playback status and control playback (play, pause, skip, volume). This is done through Spotify's official OAuth authorization process.
-      </p>
-      <p>
-        <strong>We never see or store your data.</strong> The authorization happens entirely in your browser between you and Spotify. The generated Client ID and Refresh Token are only stored locally in your browser during setup and in your iCUE widget settings afterward. Neither this page nor the widget sends data anywhere except to Spotify's official API.
-      </p>
-      <p>
-        <strong>Keep your Client ID and Refresh Token private.</strong> While a Refresh Token is less sensitive than a Client Secret, it should still be treated like a password. Anyone with both values could control your Spotify playback.
-      </p>
     </div>
 
     <!-- Step 1: Create Spotify App -->
@@ -468,13 +591,13 @@
       <p class="instruction">
         3. Fill in the form:
       </p>
-      <p class="instruction" style="padding-left:32px;">
+      <p class="instruction" style="padding-left:36px;">
         • <strong>App name:</strong> <code>Cxeify</code>
       </p>
-      <p class="instruction" style="padding-left:32px;">
+      <p class="instruction" style="padding-left:36px;">
         • <strong>App description:</strong> <code>iCUE Widget for Xeneon Edge</code>
       </p>
-      <p class="instruction" style="padding-left:32px;">
+      <p class="instruction" style="padding-left:36px;">
         • <strong>APIs used:</strong> ✅ <span class="highlight">Web API</span>
       </p>
       <p class="instruction">
@@ -514,12 +637,12 @@
         Authorize with Spotify
       </div>
 
-      <p class="instruction" style="padding-left:0;margin-bottom:12px;">
+      <p class="instruction" style="padding-left:0;margin-bottom:14px;">
         Grant Cxeify permission to control your Spotify playback.
       </p>
 
       <button class="btn btn-primary" id="authBtn" onclick="authorizeSpotify()" disabled style="width:100%;">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
           <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
           <polyline points="22 4 12 14.01 9 11.01"/>
         </svg>
@@ -535,7 +658,7 @@
         Setup Complete
       </div>
 
-      <p class="instruction" style="padding-left:0;margin-bottom:12px;color:#cccccc;">
+      <p class="instruction" style="padding-left:0;margin-bottom:14px;color:#cccccc;">
         Copy these values into your iCUE widget settings:
       </p>
 
@@ -545,7 +668,7 @@
         <button class="btn-copy" id="copyClientId" onclick="copyToClipboard('resultClientId', this)">Copy</button>
       </div>
 
-      <div class="token-row" style="margin-top:8px;">
+      <div class="token-row" style="margin-top:10px;">
         <span class="token-label">Refresh Token</span>
         <span class="token-value" id="resultRefreshToken">-</span>
         <button class="btn-copy" id="copyRefreshToken" onclick="copyToClipboard('resultRefreshToken', this)">Copy</button>
@@ -553,19 +676,19 @@
 
       <div class="divider"></div>
 
-      <p class="instruction" style="padding-left:0;color:#555555;font-size:12px;">
+      <p class="instruction" style="padding-left:0;color:#555555;font-size:13px;">
         1. Open <strong>iCUE</strong> → your <strong>Xeneon Edge</strong> device
       </p>
-      <p class="instruction" style="padding-left:0;color:#555555;font-size:12px;">
+      <p class="instruction" style="padding-left:0;color:#555555;font-size:13px;">
         2. Select the <strong>Cxeify</strong> widget
       </p>
-      <p class="instruction" style="padding-left:0;color:#555555;font-size:12px;">
+      <p class="instruction" style="padding-left:0;color:#555555;font-size:13px;">
         3. Click <strong>Widget Settings</strong> (gear icon)
       </p>
-      <p class="instruction" style="padding-left:0;color:#555555;font-size:12px;">
+      <p class="instruction" style="padding-left:0;color:#555555;font-size:13px;">
         4. Paste <strong>Client ID</strong> and <strong>Refresh Token</strong> into the fields
       </p>
-      <p class="instruction" style="padding-left:0;color:#555555;font-size:12px;">
+      <p class="instruction" style="padding-left:0;color:#555555;font-size:13px;">
         5. The widget will connect automatically
       </p>
     </div>
@@ -579,6 +702,12 @@
   </div>
 
   <script>
+    // ── Privacy Notice ────────────────────────────────────────────
+    function acceptPrivacy() {
+      document.getElementById('privacy-overlay').classList.add('hidden');
+      document.getElementById('setup-content').style.display = 'block';
+    }
+
     // ── Determine callback URL ────────────────────────────────────
     const callbackUrl = window.location.href.replace(/\/[^/]*$/, '/callback.html');
     document.getElementById('redirectUri').textContent = callbackUrl;
@@ -613,7 +742,6 @@
           btn.classList.remove('copied');
         }, 2000);
       } catch (e) {
-        // Fallback for older browsers
         const textarea = document.createElement('textarea');
         textarea.value = text;
         document.body.appendChild(textarea);
