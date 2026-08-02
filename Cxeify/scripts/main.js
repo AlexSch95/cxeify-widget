@@ -75,8 +75,6 @@ function getIcueProperty(name, defaultValue) {
 
 function applySettings(settings = {}) {
   Object.assign(state, settings);
-  state.textColor = getIcueProperty('textColor', state.textColor);
-  state.accentColor = getIcueProperty('accentColor', state.accentColor);
   state.backgroundColor = getIcueProperty('backgroundColor', state.backgroundColor);
   state.transparency = getIcueProperty('transparency', state.transparency);
   state.clientId = getIcueProperty('clientId', state.clientId);
@@ -467,11 +465,6 @@ function volumeEnd(e) {
     sendControl(`/me/player/volume?volume_percent=${volumePending}`, 'PUT');
     volumePending = null;
   }
-}
-
-// ── Setup Page ────────────────────────────────────────────────────
-function openSetupPage() {
-  window.location.href = 'https://alexsch95.github.io/cxeify-widget/index.html';
 }
 
 // ── Helpers ───────────────────────────────────────────────────────

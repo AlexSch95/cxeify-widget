@@ -10,11 +10,10 @@
   <!-- Widget configuration properties -->
   <meta name="x-icue-property" content="clientId" data-label="tr('Spotify Client ID')" data-type="textfield" data-default="''" />
   <meta name="x-icue-property" content="refreshToken" data-label="tr('Spotify Refresh Token')" data-type="textfield" data-default="''" />
+  <meta name="x-icue-property" content="setupHelp" data-label="tr('Setup Help')" data-type="description" data-default="'Setup guide: github.com/AlexSch95/cxeify-widget'" />
   <meta name="x-icue-property" content="pollingInterval" data-label="tr('Update Interval')" data-type="slider" data-default="2000" data-min="500" data-max="5000" data-step="100" data-unit-label="'ms'" />
 
   <!-- Personalization properties -->
-  <meta name="x-icue-property" content="textColor" data-label="tr('Text Color')" data-type="color" data-default="'#ffffff'" />
-  <meta name="x-icue-property" content="accentColor" data-label="tr('Accent Color')" data-type="color" data-default="'#1DB954'" />
   <meta name="x-icue-property" content="backgroundColor" data-label="tr('Background Color')" data-type="color" data-default="'#121212'" />
   <meta name="x-icue-property" content="transparency" data-label="tr('Albumcover Backdrop Transparency')" data-type="slider" data-default="60" data-min="0" data-max="100" data-step="1" data-unit-label="'%'" />
 
@@ -34,7 +33,7 @@
     },
     {
       "title": "tr('Custom Style')",
-      "properties": ["textColor", "accentColor", "backgroundColor", "transparency", "songInfoColor", "playBtnColor", "prevNextColor", "activeBtnColor", "barFillColor"]
+      "properties": ["backgroundColor", "transparency", "songInfoColor", "playBtnColor", "prevNextColor", "activeBtnColor", "barFillColor"]
     }
   ]
   </script>
@@ -88,14 +87,7 @@
       </div>
       <h2>Not Configured</h2>
       <p>Set your Spotify Client ID and Refresh Token in the widget settings.</p>
-      <button class="ctrl-btn setup-btn" onclick="openSetupPage()" style="margin-top:12px;background:var(--accent-color);color:#000;padding:12px 24px;border-radius:8px;border:none;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;opacity:1;">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right:6px;">
-          <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
-          <polyline points="15 3 21 3 21 9"/>
-          <line x1="10" y1="14" x2="21" y2="3"/>
-        </svg>
-        Open Setup Guide
-      </button>
+      <p style="font-size:12px;opacity:0.5;margin-top:8px;">Setup guide: github.com/AlexSch95/cxeify-widget</p>
     </div>
 
     <!-- Player UI -->
