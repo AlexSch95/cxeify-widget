@@ -17,10 +17,8 @@ const state = {
   songInfoColor: '#ffffff',
   playBtnColor: '#1DB954',
   prevNextColor: '#ffffff',
-  shuffleColor: '#ffffff',
-  repeatColor: '#ffffff',
-  volumeFillColor: '#ffffff',
-  progressFillColor: '#1DB954',
+  activeBtnColor: '#1DB954',
+  barFillColor: '#1DB954',
 };
 
 let pollTimer = null;
@@ -87,10 +85,8 @@ function applySettings(settings = {}) {
   state.songInfoColor = getIcueProperty('songInfoColor', state.songInfoColor);
   state.playBtnColor = getIcueProperty('playBtnColor', state.playBtnColor);
   state.prevNextColor = getIcueProperty('prevNextColor', state.prevNextColor);
-  state.shuffleColor = getIcueProperty('shuffleColor', state.shuffleColor);
-  state.repeatColor = getIcueProperty('repeatColor', state.repeatColor);
-  state.volumeFillColor = getIcueProperty('volumeFillColor', state.volumeFillColor);
-  state.progressFillColor = getIcueProperty('progressFillColor', state.progressFillColor);
+  state.activeBtnColor = getIcueProperty('activeBtnColor', state.activeBtnColor);
+  state.barFillColor = getIcueProperty('barFillColor', state.barFillColor);
   
   // Apply CSS variables
   document.documentElement.style.setProperty('--text-color', state.textColor);
@@ -100,10 +96,17 @@ function applySettings(settings = {}) {
   document.documentElement.style.setProperty('--song-info-color', state.songInfoColor);
   document.documentElement.style.setProperty('--play-btn-color', state.playBtnColor);
   document.documentElement.style.setProperty('--prev-next-color', state.prevNextColor);
-  document.documentElement.style.setProperty('--shuffle-color', state.shuffleColor);
-  document.documentElement.style.setProperty('--repeat-color', state.repeatColor);
-  document.documentElement.style.setProperty('--volume-fill-color', state.volumeFillColor);
-  document.documentElement.style.setProperty('--progress-fill-color', state.progressFillColor);
+  document.documentElement.style.setProperty('--active-btn-color', state.activeBtnColor);
+  document.documentElement.style.setProperty('--bar-fill-color', state.barFillColor);
+
+  // Dynamic play button icon color (black on bright bg, white on dark bg)
+  const hex = state.playBtnColor.replace('#', '');
+  const r = parseInt(hex.substring(0, 2), 16);
+  const g = parseInt(hex.substring(2, 4), 16);
+  const b = parseInt(hex.substring(4, 6), 16);
+  const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+  const iconColor = luminance > 0.5 ? '#000000' : '#ffffff';
+  document.documentElement.style.setProperty('--play-btn-icon-color', iconColor);
 
   console.log('[Cxeify] Settings applied:', JSON.stringify(state));
 
@@ -464,6 +467,11 @@ function volumeEnd(e) {
     sendControl(`/me/player/volume?volume_percent=${volumePending}`, 'PUT');
     volumePending = null;
   }
+}
+
+// ── Setup Page ────────────────────────────────────────────────────
+function openSetupPage() {
+  window.open('https://alexsch95.github.io/cxeify-widget/index.html', '_blank');
 }
 
 // ── Helpers ───────────────────────────────────────────────────────

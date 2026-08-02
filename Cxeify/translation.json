@@ -23,8 +23,6 @@
   "Song Info Color": "Song Info Color",
   "Play Button Color": "Play Button Color",
   "Previous/Next Color": "Previous/Next Color",
-  "Shuffle Color": "Shuffle Color",
-  "Repeat Color": "Repeat Color",
-  "Volume Fill Color": "Volume Fill Color",
-  "Progress Fill Color": "Progress Fill Color"
+  "Active Button Color": "Active Button Color",
+  "Bar Fill Color": "Bar Fill Color"
 }

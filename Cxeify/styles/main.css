@@ -7,10 +7,9 @@
   --song-info-color: #ffffff;
   --play-btn-color: #1DB954;
   --prev-next-color: #ffffff;
-  --shuffle-color: #ffffff;
-  --repeat-color: #ffffff;
-  --volume-fill-color: #ffffff;
-  --progress-fill-color: #1DB954;
+  --active-btn-color: #1DB954;
+  --bar-fill-color: #1DB954;
+  --play-btn-icon-color: #000000;
 }
 
 /* ── RESET & BASE ────────────────────────────────────────────── */
@@ -189,7 +188,7 @@ body {
 
 .ctrl-btn-play {
   background: var(--play-btn-color);
-  color: #000;
+  color: var(--play-btn-icon-color);
   opacity: 1;
   border-radius: 50%;
   box-shadow: 0 0 12px rgba(29, 185, 84, 0.3);
@@ -204,20 +203,12 @@ body {
 
 .ctrl-btn[data-active="true"] {
   opacity: 1;
-  color: var(--accent-color);
-}
-
-#btn-shuffle {
-  color: var(--shuffle-color);
+  color: var(--active-btn-color);
 }
 
 #btn-prev,
 #btn-next {
   color: var(--prev-next-color);
-}
-
-#btn-repeat {
-  color: var(--repeat-color);
 }
 
 #btn-repeat {
@@ -257,7 +248,7 @@ body {
 
 #volume-fill {
   height: 100%;
-  background: var(--volume-fill-color);
+  background: var(--bar-fill-color);
   border-radius: 999px;
   width: 100%;
   opacity: 0.5;
@@ -296,7 +287,7 @@ body {
 
 #progress-fill {
   height: 100%;
-  background: var(--progress-fill-color);
+  background: var(--bar-fill-color);
   border-radius: 999px;
   width: 0%;
   transition: width 0.3s linear;

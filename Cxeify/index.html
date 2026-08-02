@@ -22,10 +22,8 @@
   <meta name="x-icue-property" content="songInfoColor" data-label="tr('Song Info Color')" data-type="color" data-default="'#ffffff'" />
   <meta name="x-icue-property" content="playBtnColor" data-label="tr('Play Button Color')" data-type="color" data-default="'#1DB954'" />
   <meta name="x-icue-property" content="prevNextColor" data-label="tr('Previous/Next Color')" data-type="color" data-default="'#ffffff'" />
-  <meta name="x-icue-property" content="shuffleColor" data-label="tr('Shuffle Color')" data-type="color" data-default="'#ffffff'" />
-  <meta name="x-icue-property" content="repeatColor" data-label="tr('Repeat Color')" data-type="color" data-default="'#ffffff'" />
-  <meta name="x-icue-property" content="volumeFillColor" data-label="tr('Volume Fill Color')" data-type="color" data-default="'#ffffff'" />
-  <meta name="x-icue-property" content="progressFillColor" data-label="tr('Progress Fill Color')" data-type="color" data-default="'#1DB954'" />
+  <meta name="x-icue-property" content="activeBtnColor" data-label="tr('Active Button Color')" data-type="color" data-default="'#1DB954'" />
+  <meta name="x-icue-property" content="barFillColor" data-label="tr('Bar Fill Color')" data-type="color" data-default="'#1DB954'" />
 
   <!-- Property groups -->
   <script id="x-icue-groups" type="application/json">
@@ -40,7 +38,7 @@
     },
     {
       "title": "tr('Colors')",
-      "properties": ["songInfoColor", "playBtnColor", "prevNextColor", "shuffleColor", "repeatColor", "volumeFillColor", "progressFillColor"]
+      "properties": ["songInfoColor", "playBtnColor", "prevNextColor", "activeBtnColor", "barFillColor"]
     }
   ]
   </script>
@@ -94,6 +92,14 @@
       </div>
       <h2>Not Configured</h2>
       <p>Set your Spotify Client ID and Refresh Token in the widget settings.</p>
+      <button class="ctrl-btn setup-btn" onclick="openSetupPage()" style="margin-top:12px;background:var(--accent-color);color:#000;padding:12px 24px;border-radius:8px;border:none;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;opacity:1;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right:6px;">
+          <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+          <polyline points="15 3 21 3 21 9"/>
+          <line x1="10" y1="14" x2="21" y2="3"/>
+        </svg>
+        Open Setup Guide
+      </button>
     </div>
 
     <!-- Player UI -->
