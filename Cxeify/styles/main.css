@@ -348,11 +348,11 @@ body {
     font-size: 20px;
   }
 
-  /* ── Controls container (45, 459) 750×143 ── */
+  /* ── Controls container (45, 240) 750×143 ── */
   #controls-container {
     position: absolute;
     left: 45px;
-    top: 459px;
+    top: 240px;
     width: 750px;
     height: 143px;
     box-sizing: border-box;

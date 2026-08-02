@@ -712,6 +712,12 @@
       document.getElementById('setup-content').style.display = 'block';
     }
 
+    // Auto-accept privacy if returning from OAuth callback
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.has('clientId') || urlParams.has('error')) {
+      acceptPrivacy();
+    }
+
     // ── Determine callback URL ────────────────────────────────────
     const callbackUrl = window.location.href.replace(/\/[^/]*$/, '/callback.html');
     document.getElementById('redirectUri').textContent = callbackUrl;
