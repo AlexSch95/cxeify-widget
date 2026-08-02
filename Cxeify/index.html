@@ -178,6 +178,13 @@
 
   <script src="scripts/main.js"></script>
   <script>
+    // Detect iCUE preview mode for scaled-down rendering
+    try {
+      if (typeof iCUE !== 'undefined' && iCUE.isPreview) {
+        document.documentElement.classList.add('preview-mode');
+      }
+    } catch (e) { /* ignore */ }
+
     // iCUE integration - only runs when loaded inside iCUE
     try {
       icueEvents = {

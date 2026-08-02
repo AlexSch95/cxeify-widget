@@ -469,3 +469,121 @@ body {
     opacity: 0.6;
   }
 }
+
+/* ══════════════════════════════════════════════════════════════
+   ═══  iCUE PREVIEW MODE  (~314×260)  ═══
+   ══════════════════════════════════════════════════════════════ */
+.preview-mode #size-unavailable {
+  display: none !important;
+}
+
+.preview-mode #player {
+  display: block;
+}
+
+.preview-mode #track-info {
+  position: absolute;
+  left: 0;
+  top: 7vmin;
+  width: 100%;
+  text-align: center;
+  padding: 0 4vmin;
+  box-sizing: border-box;
+}
+
+.preview-mode #track-name {
+  font-size: 6vmin;
+  margin-bottom: 1vmin;
+  max-width: 90vmin;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.preview-mode #track-artist {
+  font-size: 2.5vmin;
+}
+
+.preview-mode #controls-container {
+  position: absolute;
+  left: 5vmin;
+  top: 24vmin;
+  width: 90vmin;
+  height: auto;
+  box-sizing: border-box;
+  padding: 2vmin;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2vmin;
+}
+
+.preview-mode #controls {
+  gap: 2vmin;
+}
+
+.preview-mode .ctrl-btn {
+  width: 12vmin;
+  height: 12vmin;
+}
+
+.preview-mode .ctrl-btn svg {
+  width: 6vmin;
+  height: 6vmin;
+}
+
+.preview-mode .ctrl-btn-play {
+  width: 16vmin;
+  height: 16vmin;
+}
+
+.preview-mode .ctrl-btn-play svg {
+  width: 8vmin;
+  height: 8vmin;
+}
+
+.preview-mode #repeat-indicator {
+  font-size: 2.5vmin;
+}
+
+.preview-mode #volume-container {
+  gap: 1.5vmin;
+  width: 70%;
+}
+
+.preview-mode .ctrl-btn-vol svg {
+  width: 4vmin;
+  height: 4vmin;
+}
+
+.preview-mode #volume-bar {
+  height: 1.5vmin;
+}
+
+.preview-mode #volume-thumb {
+  width: 3.5vmin;
+  height: 3.5vmin;
+}
+
+.preview-mode #progress-container {
+  position: absolute;
+  left: 0;
+  top: 80vmin;
+  width: 100vmin;
+  padding: 1vmin 0;
+}
+
+.preview-mode #progress-bar {
+  height: 1.5vmin;
+}
+
+.preview-mode #progress-thumb {
+  width: 3vmin;
+  height: 3vmin;
+}
+
+.preview-mode #progress-time {
+  margin-top: 0.5vmin;
+  font-size: 1.5vmin;
+  padding: 0 3vmin;
+}
