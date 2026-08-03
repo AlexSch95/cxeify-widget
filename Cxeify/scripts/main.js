@@ -694,11 +694,11 @@ function startMockMode() {
 
 // ── Init ──────────────────────────────────────────────────────────
 if (DEV_MODE) {
-  // Add dev-mode class to <html> so CSS overrides hide overlays
-  document.documentElement.classList.add('dev-mode');
+  // Dev mode: class already on <html> from markup, start mock player
   startMockMode();
 } else {
-  // Show loading immediately
+  // Remove dev-mode class (prevents CSS overrides) and show loading
+  document.documentElement.classList.remove('dev-mode');
   showState('loading');
 
   // Start after a short delay to let iCUE settings apply
