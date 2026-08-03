@@ -5,6 +5,11 @@
  * Uses PKCE OAuth tokens stored in iCUE settings.
  */
 
+// ── Dev Mode ─────────────────────────────────────────────────────────
+// Set to true to preview the player UI without needing Spotify credentials.
+// Shows a simulated player with random dummy data (ideal for visual editors).
+const DEV_MODE = false;
+
 // ── State ─────────────────────────────────────────────────────────
 const state = {
   clientId: '',
@@ -437,6 +442,14 @@ function updatePlayback(data) {
 
 // ── Controls ──────────────────────────────────────────────────────
 dom.btnPlay.addEventListener('click', async () => {
+  if (DEV_MODE) {
+    // In dev mode, just toggle local state
+    if (currentPlayback) {
+      currentPlayback.is_playing = !currentPlayback.is_playing;
+      updatePlayback(currentPlayback);
+    }
+    return;
+  }
   if (currentPlayback?.is_playing) {
     await sendControl('/me/player/pause', 'PUT');
   } else {
@@ -445,15 +458,29 @@ dom.btnPlay.addEventListener('click', async () => {
 });
 
 dom.btnNext.addEventListener('click', async () => {
+  if (DEV_MODE) {
+    // In dev mode, cycle to next mock track
+    mockNextTrack();
+    return;
+  }
   await sendControl('/me/player/next', 'POST');
 });
 
 dom.btnPrev.addEventListener('click', async () => {
+  if (DEV_MODE) {
+    // In dev mode, cycle to previous mock track
+    mockPrevTrack();
+    return;
+  }
   await sendControl('/me/player/previous', 'POST');
 });
 
 dom.btnShuffle.addEventListener('click', async () => {
   const newState = dom.btnShuffle.dataset.active !== 'true';
+  if (DEV_MODE) {
+    dom.btnShuffle.dataset.active = newState ? 'true' : 'false';
+    return;
+  }
   await sendControl(`/me/player/shuffle?state=${newState}`, 'PUT');
   dom.btnShuffle.dataset.active = newState ? 'true' : 'false';
 });
@@ -463,6 +490,11 @@ dom.btnRepeat.addEventListener('click', async () => {
     ? (dom.repeatIndicator.hidden ? 'context' : 'track') 
     : 'off';
   const next = current === 'off' ? 'context' : current === 'context' ? 'track' : 'off';
+  if (DEV_MODE) {
+    dom.btnRepeat.dataset.active = next !== 'off' ? 'true' : 'false';
+    dom.repeatIndicator.hidden = next !== 'track';
+    return;
+  }
   await sendControl(`/me/player/repeat?state=${next}`, 'PUT');
   dom.btnRepeat.dataset.active = next !== 'off' ? 'true' : 'false';
   dom.repeatIndicator.hidden = next !== 'track';
@@ -500,7 +532,15 @@ function seekEnd() {
   
   if (seekPending != null && currentPlayback?.item?.duration_ms) {
     const pos = Math.round(seekPending * currentPlayback.item.duration_ms);
-    sendControl(`/me/player/seek?position_ms=${pos}`, 'PUT');
+    if (DEV_MODE) {
+      // In dev mode, just update local state
+      if (currentPlayback) {
+        currentPlayback.progress_ms = pos;
+        updatePlayback(currentPlayback);
+      }
+    } else {
+      sendControl(`/me/player/seek?position_ms=${pos}`, 'PUT');
+    }
     seekPending = null;
   }
 }
@@ -531,7 +571,15 @@ function volumeEnd() {
   isDraggingVolume = false;
   
   if (volumePending != null) {
-    sendControl(`/me/player/volume?volume_percent=${volumePending}`, 'PUT');
+    if (DEV_MODE) {
+      // In dev mode, just update local state
+      if (currentPlayback) {
+        currentPlayback.device.volume_percent = volumePending;
+        updatePlayback(currentPlayback);
+      }
+    } else {
+      sendControl(`/me/player/volume?volume_percent=${volumePending}`, 'PUT');
+    }
     volumePending = null;
   }
 }
@@ -545,11 +593,106 @@ function formatTime(ms) {
   return `${min}:${sec.toString().padStart(2, '0')}`;
 }
 
-// ── Init ──────────────────────────────────────────────────────────
-// Show loading immediately
-showState('loading');
+// ── Dev Mode: Mock Data ───────────────────────────────────────────
+// Only used when DEV_MODE = true. Provides realistic dummy playback
+// data so the player UI can be previewed in visual editors.
 
-// Start after a short delay to let iCUE settings apply
-setTimeout(() => {
-  startPolling();
-}, 300);
+const MOCK_TRACKS = [
+  { name: 'Blinding Lights', artist: 'The Weeknd', duration: 200000 },
+  { name: 'Shape of You', artist: 'Ed Sheeran', duration: 233000 },
+  { name: 'Bohemian Rhapsody', artist: 'Queen', duration: 354000 },
+  { name: 'Stairway to Heaven', artist: 'Led Zeppelin', duration: 482000 },
+  { name: 'Hotel California', artist: 'Eagles', duration: 391000 },
+  { name: 'Smells Like Teen Spirit', artist: 'Nirvana', duration: 301000 },
+  { name: 'Billie Jean', artist: 'Michael Jackson', duration: 294000 },
+  { name: 'Sweet Child O\' Mine', artist: 'Guns N\' Roses', duration: 356000 },
+  { name: 'Imagine', artist: 'John Lennon', duration: 187000 },
+  { name: 'Purple Rain', artist: 'Prince', duration: 521000 },
+];
+
+const MOCK_COLORS = [
+  '#1e3a5f', '#5a2d3a', '#2d5a3a', '#5a4a2d', '#3a2d5a',
+  '#2d5a5a', '#5a3a2d', '#3a5a2d', '#4a2d5a', '#2d3a5a',
+];
+
+let mockTrackIndex = 0;
+let mockTimer = null;
+
+function generateMockData() {
+  const track = MOCK_TRACKS[mockTrackIndex];
+  const color = MOCK_COLORS[mockTrackIndex];
+  const progress = Math.floor(Math.random() * track.duration * 0.8);
+  const isPlaying = isPaused ? false : true;
+
+  return {
+    is_playing: isPlaying,
+    progress_ms: progress,
+    item: {
+      id: 'mock-' + mockTrackIndex,
+      name: track.name,
+      artists: [track.artist],
+      duration_ms: track.duration,
+      album_art: `https://placehold.co/640x640/${color.replace('#', '')}/ffffff?text=${track.name.charAt(0)}`,
+    },
+    device: {
+      volume_percent: 70,
+    },
+    shuffle_state: dom.btnShuffle.dataset.active === 'true',
+    repeat_state: dom.btnRepeat.dataset.active === 'true' 
+      ? (dom.repeatIndicator.hidden ? 'context' : 'track')
+      : 'off',
+  };
+}
+
+function mockNextTrack() {
+  mockTrackIndex = (mockTrackIndex + 1) % MOCK_TRACKS.length;
+  const data = { ...generateMockData(), is_playing: true };
+  isPaused = false;
+  updatePlayback({ active: true, auth: true, data });
+  showState('player');
+}
+
+function mockPrevTrack() {
+  mockTrackIndex = (mockTrackIndex - 1 + MOCK_TRACKS.length) % MOCK_TRACKS.length;
+  const data = { ...generateMockData(), is_playing: true };
+  isPaused = false;
+  updatePlayback({ active: true, auth: true, data });
+  showState('player');
+}
+
+function startMockMode() {
+  console.log('[Cxeify] DEV_MODE active — showing simulated player');
+  
+  // Hide loading, show player immediately
+  showState('player');
+  
+  // Generate initial mock data
+  const data = generateMockData();
+  updatePlayback({ active: true, auth: true, data });
+  
+  // Update mock data periodically to simulate live playback
+  mockTimer = setInterval(() => {
+    const data = generateMockData();
+    updatePlayback({ active: true, auth: true, data });
+    
+    // Occasionally toggle play/pause for visual variety
+    if (Math.random() < 0.05) {
+      isPaused = !isPaused;
+      currentPlayback.is_playing = !isPaused;
+      updatePlayback(currentPlayback);
+    }
+  }, 2000);
+}
+
+// ── Init ──────────────────────────────────────────────────────────
+if (DEV_MODE) {
+  startMockMode();
+} else {
+  // Show loading immediately
+  showState('loading');
+
+  // Start after a short delay to let iCUE settings apply
+  setTimeout(() => {
+    startPolling();
+  }, 300);
+}
