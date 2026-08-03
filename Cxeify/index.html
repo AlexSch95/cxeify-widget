@@ -203,8 +203,10 @@
       }
     } catch (e) {
       console.log('[Cxeify] Running outside iCUE (browser debug mode)');
-      // Apply default settings for browser debugging
-      applySettings();
+      // Apply default settings for browser debugging (unless DEV_MODE is active)
+      if (typeof DEV_MODE === 'undefined' || !DEV_MODE) {
+        applySettings();
+      }
     }
   </script>
 </body>
