@@ -28,6 +28,14 @@ let currentPlayback = null;
 let cachedAccessToken = null;
 let tokenExpiresAt = 0;
 
+// ── Adaptive Polling ────────────────────────────────────────────────
+let currentInterval = 2000;       // actual interval used right now
+let consecutiveErrors = 0;        // 429 or network errors
+let lastActiveTime = 0;           // timestamp of last valid playback
+let isPaused = false;             // whether we know playback is paused
+let isSessionAlive = false;       // whether we have a known active device
+let pollTimeout = null;           // setTimeout handle for adaptive polling
+
 // ── DOM References ────────────────────────────────────────────────
 const dom = {
   loading: document.getElementById('state-loading'),
@@ -105,10 +113,11 @@ function applySettings(settings = {}) {
   console.log('[Cxeify] Settings applied:', JSON.stringify(state));
 
   // Restart polling with new interval if changed
-  if (pollTimer) {
-    clearInterval(pollTimer);
-    pollTimer = null;
+  if (pollTimeout) {
+    clearTimeout(pollTimeout);
+    pollTimeout = null;
   }
+  pollTimer = null;
   startPolling();
 }
 
@@ -184,16 +193,25 @@ async function spotifyApi(endpoint, method = 'GET', body = null) {
       return null;
     }
 
+    if (response.status === 429) {
+      // Rate limited — apply exponential backoff
+      const retryAfter = parseInt(response.headers.get('Retry-After') || '0', 10);
+      handleRateLimit(retryAfter);
+      return null;
+    }
+
     return response;
   } catch (e) {
     console.warn('[Cxeify] API error:', e.message);
+    consecutiveErrors++;
     return null;
   }
 }
 
 async function fetchStatus() {
   const response = await spotifyApi('/me/player');
-  if (!response) return { active: false, auth: false, data: null };
+  // response === null means API unavailable (network error, rate limit, etc.)
+  if (!response) return { active: false, auth: null, data: null };
   
   if (response.status === 204) {
     return { active: false, auth: true, data: null };
@@ -233,36 +251,121 @@ async function sendControl(endpoint, method = 'PUT', body = null) {
 // ── Polling ───────────────────────────────────────────────────────
 function startPolling() {
   if (pollTimer) return;
-  poll();
-  pollTimer = setInterval(poll, state.pollingInterval);
+  pollTimer = true;
+  currentInterval = state.pollingInterval;
+  scheduleNextPoll(0);
 }
 
-async function poll() {
+function scheduleNextPoll(delay) {
+  if (pollTimeout) clearTimeout(pollTimeout);
+  pollTimeout = setTimeout(runPoll, delay);
+}
+
+// Compute the current adaptive interval based on state
+function getAdaptiveInterval() {
+  const base = Math.max(state.pollingInterval, 1000);
+
+  // If we're in error backoff, keep the current (already increased) interval
+  if (consecutiveErrors > 0) {
+    return currentInterval;
+  }
+
+  // No known session → slowest
+  if (!isSessionAlive) return Math.min(base * 10, 30000);
+  // Paused → medium
+  if (isPaused) return Math.min(base * 5, 10000);
+  // Playing → base interval
+  return base;
+}
+
+// Jitter to avoid thundering-herd sync with other clients
+function jitter(ms) {
+  return ms + Math.floor(Math.random() * 500);
+}
+
+async function runPoll() {
   // Check if credentials are configured
   if (!state.clientId || !state.refreshToken) {
     showState('noauth');
+    scheduleNextPoll(jitter(currentInterval));
     return;
   }
 
   const result = await fetchStatus();
-  
-  if (!result) {
+
+  // result.auth === null means API unavailable (network / rate limit)
+  if (result.auth === null) {
+    consecutiveErrors++;
+    if (consecutiveErrors >= 3) {
+      // Back off aggressively
+      currentInterval = Math.min(currentInterval * 2, 60000);
+    }
     showState('offline');
+    scheduleNextPoll(jitter(currentInterval));
     return;
   }
-  
+
   if (result.auth === false) {
     showState('noauth');
+    scheduleNextPoll(jitter(currentInterval));
     return;
   }
-  
+
+  // Successful request — reset error counter
+  consecutiveErrors = 0;
+
   if (!result.active || !result.data) {
+    // No active playback/device
+    isSessionAlive = false;
+    isPaused = false;
     showState('nodevice');
+
+    // Keep the session fresh by pinging devices occasionally
+    if (Date.now() - lastActiveTime > 5 * 60 * 1000) {
+      keepSessionAlive();
+    }
+    currentInterval = getAdaptiveInterval();
+    scheduleNextPoll(jitter(currentInterval));
     return;
   }
-  
+
+  // Active playback
+  isSessionAlive = true;
+  lastActiveTime = Date.now();
+  isPaused = !result.data.is_playing;
+
   updatePlayback(result.data);
   showState('player');
+
+  // Use adaptive interval
+  currentInterval = getAdaptiveInterval();
+  scheduleNextPoll(jitter(currentInterval));
+}
+
+// Trigger a lightweight API call to keep the Spotify session alive
+async function keepSessionAlive() {
+  try {
+    console.log('[Cxeify] Keeping session alive...');
+    const response = await spotifyApi('/me/player/devices');
+    if (response && response.ok) {
+      const data = await response.json();
+      const hasDevices = data.devices && data.devices.length > 0;
+      if (hasDevices) {
+        isSessionAlive = true;
+      }
+    }
+  } catch (e) {
+    console.warn('[Cxeify] Session keep-alive failed:', e.message);
+  }
+}
+
+// Handle 429 rate-limit responses with exponential backoff
+function handleRateLimit(retryAfterMs) {
+  consecutiveErrors++;
+  // If Spotify told us how long to wait, use that (or at least 10s)
+  const backoffMs = Math.max(retryAfterMs * 1000 || 0, 10000);
+  currentInterval = Math.min(Math.max(currentInterval * 2, backoffMs), 60000);
+  console.warn('[Cxeify] Rate limited. Backing off to', currentInterval, 'ms');
 }
 
 // ── UI State Management ───────────────────────────────────────────
