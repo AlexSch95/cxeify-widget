@@ -6,6 +6,19 @@
   <title>tr('Cxeify')</title>
   <link rel="icon" href="resources/icon.svg" type="image/svg+xml" />
   <link rel="stylesheet" href="styles/main.css" />
+  <style>
+    /* Dev mode: add class="dev-mode" to <html> to preview the player UI */
+    html.dev-mode #state-loading,
+    html.dev-mode #state-offline,
+    html.dev-mode #state-nodevice,
+    html.dev-mode #state-noauth,
+    html.dev-mode #size-unavailable {
+      display: none !important;
+    }
+    html.dev-mode #player {
+      display: block !important;
+    }
+  </style>
 
   <!-- Widget configuration properties -->
   <meta name="x-icue-property" content="clientId" data-label="tr('Spotify Client ID')" data-type="textfield" data-default="''" />

@@ -83,6 +83,8 @@ function getIcueProperty(name, defaultValue) {
 }
 
 function applySettings(settings = {}) {
+  // In dev mode, don't start real polling
+  if (DEV_MODE) return;
   Object.assign(state, settings);
   state.backgroundColor = getIcueProperty('backgroundColor', state.backgroundColor);
   state.transparency = getIcueProperty('transparency', state.transparency);
@@ -256,6 +258,7 @@ async function sendControl(endpoint, method = 'PUT', body = null) {
 // ── Polling ───────────────────────────────────────────────────────
 function startPolling() {
   if (pollTimer) return;
+  if (DEV_MODE) return;          // never poll in dev mode
   pollTimer = true;
   currentInterval = state.pollingInterval;
   scheduleNextPoll(0);
@@ -663,29 +666,36 @@ function mockPrevTrack() {
 function startMockMode() {
   console.log('[Cxeify] DEV_MODE active — showing simulated player');
   
+  // Prevent any polling from starting
+  pollTimer = true;
+  
   // Hide loading, show player immediately
   showState('player');
   
-  // Generate initial mock data
-  const data = generateMockData();
-  updatePlayback({ active: true, auth: true, data });
+  // Generate initial mock data and apply it
+  const mock = generateMockData();
+  updatePlayback(mock);
   
   // Update mock data periodically to simulate live playback
   mockTimer = setInterval(() => {
-    const data = generateMockData();
-    updatePlayback({ active: true, auth: true, data });
+    const mock = generateMockData();
+    updatePlayback(mock);
     
     // Occasionally toggle play/pause for visual variety
     if (Math.random() < 0.05) {
       isPaused = !isPaused;
-      currentPlayback.is_playing = !isPaused;
-      updatePlayback(currentPlayback);
+      if (currentPlayback) {
+        currentPlayback.is_playing = !isPaused;
+        updatePlayback(currentPlayback);
+      }
     }
   }, 2000);
 }
 
 // ── Init ──────────────────────────────────────────────────────────
 if (DEV_MODE) {
+  // Add dev-mode class to <html> so CSS overrides hide overlays
+  document.documentElement.classList.add('dev-mode');
   startMockMode();
 } else {
   // Show loading immediately
