@@ -8,7 +8,7 @@
 // ── Dev Mode ─────────────────────────────────────────────────────────
 // Set to true to preview the player UI without needing Spotify credentials.
 // Shows a simulated player with random dummy data (ideal for visual editors).
-const DEV_MODE = false;
+var DEV_MODE = false;
 
 // ── State ─────────────────────────────────────────────────────────
 const state = {
