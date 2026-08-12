@@ -133,7 +133,7 @@ body {
 }
 
 #track-name {
-  font-family: 'Oswald';
+  font-family: 'Oswald', var(--font-fallback);
   font-weight: 400;
   white-space: nowrap;
   overflow: hidden;
@@ -144,7 +144,7 @@ body {
 }
 
 #track-artist {
-  font-family: 'Roboto';
+  font-family: 'Roboto', var(--font-fallback);
   font-weight: 200;
   opacity: 0.8;
   white-space: nowrap;
