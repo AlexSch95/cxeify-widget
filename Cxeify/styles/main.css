@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400&family=Roboto:wght@200&display=swap');
+
 :root {
   /* ═══ RUNTIME COLORS (set by JS) ═══ */
   --text-color: #ffffff;
@@ -10,6 +12,7 @@
   --active-btn-color: #1DB954;
   --bar-fill-color: #1DB954;
   --play-btn-icon-color: #000000;
+  --font-fallback: Inter, 'Segoe UI', system-ui, -apple-system, sans-serif;
 }
 
 /* ── RESET & BASE ────────────────────────────────────────────── */
@@ -130,6 +133,7 @@ body {
 }
 
 #track-name {
+  font-family: 'Oswald', var(--font-fallback);
   font-weight: 400;
   white-space: nowrap;
   overflow: hidden;
@@ -140,6 +144,8 @@ body {
 }
 
 #track-artist {
+  font-family: 'Roboto', var(--font-fallback);
+  font-weight: 200;
   opacity: 0.8;
   white-space: nowrap;
   overflow: hidden;
@@ -345,7 +351,7 @@ body {
   }
 
   #track-name {
-    font-size: 48px;
+    font-size: 72px;
     margin-bottom: 8px;
     max-width: 720px;
     margin-left: auto;
@@ -353,7 +359,7 @@ body {
   }
 
   #track-artist {
-    font-size: 20px;
+    font-size: 36px;
   }
 
   /* ── Controls container centered, buttons + volume below ── */
@@ -419,11 +425,11 @@ body {
     height: 28px;
   }
 
-  /* ── Progress bar (0, 652) 840×44 ── */
+  /* ── Progress bar (0, 644) 840×52 ── */
   #progress-container {
     position: absolute;
     left: 0;
-    top: 652px;
+    top: 644px;
     width: 840px;
     padding: 8px 0;
   }
@@ -439,7 +445,7 @@ body {
 
   #progress-time {
     margin-top: 4px;
-    font-size: 12px;
+    font-size: 20px;
     padding: 0 30px;
   }
 }
